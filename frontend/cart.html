@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+
+    <style>
+        body{
+            font-family:Arial,sans-serif;
+            margin:20px;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        .item{
+            border:1px solid #ddd;
+            padding:15px;
+            margin-bottom:15px;
+            border-radius:10px;
+        }
+
+        button{
+            padding:10px;
+            cursor:pointer;
+            margin-top:10px;
+        }
+
+        .checkout-btn{
+            background:black;
+            color:white;
+            border:none;
+            width:100%;
+            padding:15px;
+            font-size:18px;
+        }
+    </style>
+
+</head>
+<body>
+
+<h1>🛒 Shopping Cart</h1>
+
+<div id="cartItems"></div>
+
+<h2 id="grandTotal"></h2>
+
+<button class="checkout-btn"
+onclick="goCheckout()">
+Proceed To Checkout
+</button>
+
+<script>
+
+let cart =
+JSON.parse(
+localStorage.getItem("cart")
+) || [];
+
+let cartContainer =
+document.getElementById("cartItems");
+
+let total = 0;
+
+function loadCart(){
+
+    cartContainer.innerHTML="";
+
+    total=0;
+
+    cart.forEach((item,index)=>{
+
+        let itemTotal =
+        item.price * item.quantity;
+
+        total += itemTotal;
+
+        cartContainer.innerHTML += `
+
+        <div class="item">
+
+            <h3>${item.product}</h3>
+
+            <p>
+            Price: ₹${item.price}
+            </p>
+
+            <p>
+            Quantity: ${item.quantity}
+            </p>
+
+            <p>
+            Total: ₹${itemTotal}
+            </p>
+
+            <button
+            onclick="removeItem(${index})">
+
+            Remove
+
+            </button>
+
+        </div>
+
+        `;
+    });
+
+    document
+    .getElementById("grandTotal")
+    .innerHTML =
+    "Grand Total: ₹" + total;
+}
+
+function removeItem(index){
+
+    cart.splice(index,1);
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    loadCart();
+}
+
+function goCheckout(){
+
+    if(cart.length===0){
+
+        alert(
+        "Cart is Empty"
+        );
+
+        return;
+    }
+
+    window.location.href =
+    "checkout.html";
+}
+
+loadCart();
+
+</script>
+
+</body>
+</html>

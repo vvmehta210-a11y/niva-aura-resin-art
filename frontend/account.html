@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My Account</title>
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    margin:50px;
+}
+
+.container{
+    display:flex;
+    justify-content:space-between;
+    margin-top:50px;
+}
+
+.left{
+    width:50%;
+}
+
+.right{
+    width:30%;
+}
+
+h1{
+    text-align:center;
+}
+
+button{
+    padding:12px 25px;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+</style>
+
+</head>
+<body>
+
+<h1>My Account</h1>
+
+<div class="container">
+
+    <div class="left">
+
+    <h2>Order History</h2>
+
+    <div id="orders"></div>
+
+</div>
+
+    <div class="right">
+
+        <h2>Account Details</h2>
+
+        <p>
+            <strong>Name:</strong>
+            <span id="userName"></span>
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            <span id="userEmail"></span>
+        </p>
+
+        <p>
+            India
+        </p>
+
+        <button onclick="logout()">
+            LOG OUT
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+let userName =
+localStorage.getItem("name");
+
+let userEmail =
+localStorage.getItem("email");
+
+document.getElementById(
+"userName"
+).innerText = userName || "Guest";
+
+document.getElementById(
+"userEmail"
+).innerText = userEmail || "-";
+
+async function loadOrders(){
+
+    let email =
+    localStorage.getItem("email");
+
+    const response =
+    await fetch(
+    "http://localhost:5000/orders/" +
+    email
+    );
+
+    const orders =
+    await response.json();
+
+    let html = "";
+
+    if(orders.length === 0){
+
+        html =
+        "<p>No Orders Found</p>";
+
+    }else{
+
+        orders.forEach(order => {
+
+            html += `
+            <div style="
+            border:1px solid #ddd;
+            padding:10px;
+            margin-bottom:10px;">
+
+                <h3>${order.product}</h3>
+
+                <p>₹${order.price}</p>
+
+                <p>Quantity:
+                ${order.quantity}</p>
+
+                <p>Status:
+                ${order.status}</p>
+
+            </div>
+            `;
+        });
+    }
+
+    document.getElementById("orders")
+    .innerHTML = html;
+}
+
+loadOrders();
+
+function logout(){
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    localStorage.removeItem("email");
+
+    alert("Logged Out");
+
+    window.location.href =
+    "login.html";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Users</title>
+</head>
+<body>
+
+<h1>Registered Users</h1>
+
+<table border="1">
+
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+</tr>
+</thead>
+
+<tbody id="userTable"></tbody>
+
+</table>
+
+<script>
+
+async function loadUsers(){
+
+    const response =
+    await fetch("http://localhost:5000/users");
+
+    const users =
+    await response.json();
+
+    let html = "";
+
+    users.forEach(user => {
+
+        html += `
+        <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+        </tr>
+        `;
+
+    });
+
+    document.getElementById(
+        "userTable"
+    ).innerHTML = html;
+}
+
+loadUsers();
+
+</script>
+
+</body>
+</html>

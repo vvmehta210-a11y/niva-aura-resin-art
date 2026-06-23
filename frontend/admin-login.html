@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+<h2>Customer Login History</h2>
+
+<table border="1" width="100%">
+
+<thead>
+<tr>
+    <th>Email</th>
+    <th>Login Time</th>
+</tr>
+</thead>
+
+<tbody id="loginTable"></tbody>
+
+</table>
+
+<hr>
+<h1>Admin Login</h1>
+
+<input type="text"
+id="username"
+placeholder="Username">
+
+<br><br>
+
+<input type="password"
+id="password"
+placeholder="Password">
+
+<br><br>
+
+<button onclick="login()">
+Login
+</button>
+
+<script>
+
+function login(){
+
+    let username =
+    document.getElementById("username").value;
+
+    let password =
+    document.getElementById("password").value;
+
+    if(
+        username === "vatsal" &&
+        password === "Vatsal@210"
+    ){
+
+        localStorage.setItem(
+            "adminLoggedIn",
+            "true"
+        );
+
+        window.location.href =
+        "admin.html";
+    }
+    else{
+
+        alert(
+        "Invalid Username or Password"
+        );
+    }
+}
+
+</script>
+<script>
+
+async function loadLogins(){
+
+    const response =
+    await fetch(
+    "http://localhost:5000/login-history"
+    );
+
+    const data =
+    await response.json();
+
+    let html = "";
+
+    data.forEach(item => {
+
+        html += `
+        <tr>
+            <td>${item.email}</td>
+            <td>
+                ${new Date(item.loginTime)
+                .toLocaleString()}
+            </td>
+        </tr>
+        `;
+    });
+
+    document.getElementById(
+        "loginTable"
+    ).innerHTML = html;
+}
+
+loadLogins();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment - Niva Aura Resin Art</title>
+
+    <style>
+        body{
+            font-family:Arial,sans-serif;
+            background:#f5f5f5;
+        }
+
+        .container{
+            width:500px;
+            margin:50px auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,.2);
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        .payment-option{
+            border:1px solid #ddd;
+            padding:15px;
+            margin:10px 0;
+            cursor:pointer;
+        }
+
+        .payment-option:hover{
+            background:#f0f0f0;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:black;
+            color:white;
+            border:none;
+            cursor:pointer;
+            margin-top:20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Select Payment Method</h1>
+
+    <div class="payment-option" onclick="selectPayment('UPI')">
+        UPI (Google Pay / PhonePe / Paytm)
+    </div>
+
+    <div class="payment-option" onclick="selectPayment('Card')">
+        Debit / Credit Card
+    </div>
+
+    <div class="payment-option" onclick="selectPayment('Cash On Delivery')">
+        Cash On Delivery
+    </div>
+
+    <p id="selectedMethod">
+        No Payment Method Selected
+    </p>
+
+    <button onclick="processPayment()">
+        Pay Now
+    </button>
+
+</div>
+
+<script>
+
+let paymentMethod="";
+
+function selectPayment(method){
+
+    paymentMethod = method;
+
+    document.getElementById("selectedMethod").innerHTML =
+        "Selected: " + method;
+}
+
+async function processPayment(){
+
+    if(paymentMethod===""){
+        alert("Please Select Payment Method");
+        return;
+    }
+
+    let email =
+    localStorage.getItem("email");
+
+    const response =
+    await fetch(
+    "http://localhost:5000/order",
+    {
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            userEmail:email,
+
+            product:"Epoxy Resin Kit",
+
+            price:599,
+
+            quantity:1,
+
+            status:"Pending"
+
+        })
+    });
+
+    const data =
+    await response.json();
+
+    alert(
+        "Payment Successful\nMethod: " +
+        paymentMethod
+    );
+
+    window.location.href =
+    "success.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us - Niva Aura Resin Art</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="products.html">Products</a>
+    <a href="contact.html">Contact</a>
+
+</nav>
+
+<div class="contact-container">
+
+    <h1>Contact Us</h1>
+
+    <input
+type="text"
+id="name"
+placeholder="Your Name">
+
+<input
+type="email"
+id="email"
+placeholder="Your Email">
+
+<textarea
+id="message"
+rows="5"
+placeholder="Your Message">
+</textarea>
+
+<button
+class="btn"
+onclick="sendMessage()">
+    Send Message
+</button>
+</div>
+
+<footer>
+
+    <h2>Niva Aura Resin Art</h2>
+
+    <p>📧 nivaaura@gmail.com</p>
+
+    <p>📞 +91 9876543210</p>
+
+    <p>📍 Ahmedabad, Gujarat, India</p>
+
+</footer>
+<script>
+
+async function sendMessage(){
+
+    let name =
+    document.getElementById("name").value;
+
+    let email =
+    document.getElementById("email").value;
+
+    let message =
+    document.getElementById("message").value;
+
+    try{
+
+        const response =
+        await fetch(
+        "http://localhost:5000/contact",
+        {
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+                name,
+                email,
+                message
+            })
+        });
+
+        const data =
+        await response.json();
+
+        alert(data.message);
+
+    }catch(error){
+
+        alert("Server Error");
+        console.log(error);
+    }
+}
+
+</script>
+</body>
+</html>

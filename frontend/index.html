@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Niva Aura Resin Art</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Cart Section -->
+
+    <div style="text-align:right;padding:20px;">
+
+    <div id="userProfile"></div>
+
+    <br>
+
+    🛒 Cart:
+    <span id="cartCount">0</span>
+
+    <button onclick="goToCart()">
+        View Cart
+    </button>
+
+</div>
+
+    <!-- Navigation -->
+
+    <nav>
+
+        <a href="index.html">Home</a>
+
+        <a href="about.html">About</a>
+
+        <a href="products.html">Products</a>
+
+        <a href="gallery.html">Gallery</a>
+
+        <a href="contact.html">Contact</a>
+
+        <a href="singup.html">singup</a>
+
+        <a href="admin-login.html">Admin</a>
+
+        <a href="wishlist.html">Wishlist ❤️</a>
+
+    </nav>
+
+    <!-- Heading -->
+
+    <div class="hero-section">
+
+    <h1>Niva Aura Resin Art</h1>
+
+    <h2>Welcome to Niva Aura Resin Art</h2>
+
+    <p>Handmade Resin Art Products</p>
+
+    <button class="hero-btn">
+        Contact Us
+    </button>
+
+</div>
+
+    <section class="categories">
+
+    <div class="category-card">
+        Wash Basins
+    </div>
+
+    <div class="category-card">
+        Wall Clocks
+    </div>
+
+    <div class="category-card">
+        Keychains
+    </div>
+
+    <div class="category-card">
+        Custom Gifts
+    </div>
+
+</section>
+
+<h2 class="section-title">
+Customer Reviews
+</h2>
+
+<div class="testimonials">
+
+    <div class="testimonial-card">
+        ⭐⭐⭐⭐⭐
+        <p>Beautiful resin keychain.</p>
+        <h4>- Priya</h4>
+    </div>
+
+    <div class="testimonial-card">
+        ⭐⭐⭐⭐⭐
+        <p>Amazing handmade clock.</p>
+        <h4>- Rahul</h4>
+    </div>
+
+    <div class="testimonial-card">
+        ⭐⭐⭐⭐⭐
+        <p>Excellent quality resin art.</p>
+        <h4>- Neha</h4>
+    </div>
+
+</div>
+
+<div class="newsletter">
+
+    <h2>Subscribe For Updates</h2>
+
+    <input
+    type="email"
+    placeholder="Enter Email">
+
+    <button>
+        Subscribe
+    </button>
+
+</div>
+
+<h2>Products</h2>
+
+<div style="text-align:center;margin:30px;">
+
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="Search Products..."
+    onkeyup="searchProducts()">
+
+    <br><br>
+
+    <select
+    id="categoryFilter"
+    onchange="filterProducts()">
+
+        <option value="All">
+            All Categories
+        </option>
+
+        <option value="Keychains">
+            Keychains
+        </option>
+
+        <option value="Wall Clocks">
+            Wall Clocks
+        </option>
+
+        <option value="Wash Basins">
+            Wash Basins
+        </option>
+
+        <option value="Custom Gifts">
+            Custom Gifts
+        </option>
+
+    </select>
+
+</div>
+
+
+
+<hr>
+
+<h2>Write Review</h2>
+
+<div style="text-align:center;">
+
+<select id="rating">
+    <option value="5">⭐⭐⭐⭐⭐</option>
+    <option value="4">⭐⭐⭐⭐</option>
+    <option value="3">⭐⭐⭐</option>
+    <option value="2">⭐⭐</option>
+    <option value="1">⭐</option>
+</select>
+
+<br><br>
+
+<textarea
+id="review"
+placeholder="Write your review"
+style="
+width:300px;
+height:100px;
+padding:10px;">
+</textarea>
+
+<br><br>
+
+<button onclick="submitReview()">
+Submit Review
+</button>
+
+</div>
+
+<hr>
+
+<h2>Customer Reviews</h2>
+
+<div id="reviews"></div>
+
+<div id="products"></div>
+    <!-- Popup -->
+
+    <div id="popup" class="popup">
+
+        <div class="popup-content">
+
+            <h2 id="productName"></h2>
+
+            <p>Quantity</p>
+
+            <input
+            type="number"
+            id="qty"
+            value="1"
+            min="1">
+
+            <br><br>
+
+            <button onclick="addToCart()">
+                Confirm
+            </button>
+
+            <button onclick="closePopup()">
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+<script>
+
+const email =
+localStorage.getItem("email");
+
+if(email){
+
+    const firstLetter =
+    email.charAt(0).toUpperCase();
+
+    document.getElementById("userProfile").innerHTML = `
+        <div class="profile-circle"
+        onclick="window.location.href='account.html'">
+            ${firstLetter}
+        </div>
+    `;
+}
+
+</script>
+    
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <h2>Niva Aura Resin Art</h2>
+
+        <p>
+            Handmade Resin Art Products | Keychains | Clocks |
+            Wash Basins | Home Decor
+        </p>
+
+        <p>
+            📧 Email: nivaaura@gmail.com
+        </p>
+
+        <p>
+            📞 Phone: +91 9876543210
+        </p>
+
+        <p>
+            📍 Ahmedabad, Gujarat, India
+        </p>
+
+        <hr>
+
+        <p>
+            © 2026 Niva Aura Resin Art. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+</body>
+
+</html>

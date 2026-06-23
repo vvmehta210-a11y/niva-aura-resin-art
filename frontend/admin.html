@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel - Niva Aura Resin Art</title>
+
+    <style>
+
+        body{
+            font-family:Arial, sans-serif;
+            margin:20px;
+        }
+
+        input{
+            width:250px;
+            padding:10px;
+            margin:5px;
+        }
+
+        button{
+            padding:10px 15px;
+            cursor:pointer;
+        }
+
+        .product{
+            border:1px solid #ddd;
+            padding:15px;
+            margin-top:10px;
+            border-radius:10px;
+        }
+
+        img{
+            width:100px;
+            height:100px;
+            object-fit:cover;
+        }
+
+        .logout{
+            float:right;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<script>
+
+if(
+localStorage.getItem("adminLoggedIn")
+!== "true"
+){
+
+    alert("Please Login First");
+
+    window.location.href =
+    "admin-login.html";
+}
+
+</script>
+
+<h1>Admin Product Management</h1>
+
+<button class="logout" onclick="logout()">
+Logout
+</button>
+
+<hr>
+<h2>Registered Customers</h2>
+
+<table border="1" width="100%">
+
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Email</th>
+</tr>
+</thead>
+
+<tbody id="customerTable"></tbody>
+
+</table>
+<hr>
+
+<h2>Customer Login History</h2>
+
+<table border="1" width="100%">
+
+<thead>
+<tr>
+    <th>Email</th>
+    <th>Login Time</th>
+</tr>
+</thead>
+
+<tbody id="loginTable"></tbody>
+
+</table>
+
+<hr>
+<h2>Add Product</h2>
+
+<input
+type="text"
+id="name"
+placeholder="Product Name">
+
+<br>
+
+<input
+type="number"
+id="price"
+placeholder="Price">
+
+<br>
+
+<input
+type="text"
+id="category"
+placeholder="Category">
+
+<br>
+
+<input
+type="file"
+id="image">
+
+
+
+
+<br><br>
+
+<button onclick="addProduct()">
+Add Product
+</button>
+
+<hr>
+
+<h2>Product List</h2>
+
+<div id="productList"></div>
+
+<script>
+
+let products =
+JSON.parse(
+localStorage.getItem("products")
+) || [];
+
+function logout(){
+
+    localStorage.removeItem(
+        "adminLoggedIn"
+    );
+
+    window.location.href =
+    "admin-login.html";
+}
+
+async function addProduct(){
+
+
+let name =
+document.getElementById("name").value;
+
+let price =
+document.getElementById("price").value;
+
+let category =
+document.getElementById("category").value;
+
+let imageFile =
+document.getElementById("image").files[0];
+
+if(name === "" || price === "" || !imageFile){
+
+    alert("Please Fill Product Details");
+    return;
+}
+
+let formData =
+new FormData();
+
+formData.append(
+    "image",
+    imageFile
+);
+
+const uploadResponse =
+await fetch(
+"http://localhost:5000/upload",
+{
+    method:"POST",
+    body:formData
+});
+
+const uploadData =
+await uploadResponse.json();
+
+const image =
+"http://localhost:5000/uploads/" +
+uploadData.filename;
+
+const response =
+await fetch(
+"http://localhost:5000/add-product",
+{
+    method:"POST",
+
+    headers:{
+        "Content-Type":
+        "application/json"
+    },
+
+    body:JSON.stringify({
+        name,
+        price,
+        image,
+        category
+    })
+});
+
+const data =
+await response.json();
+
+alert(data.message);
+
+loadProducts();
+
+document.getElementById("name").value="";
+document.getElementById("price").value="";
+document.getElementById("image").value="";
+
+
+}
+async function deleteProduct(id){
+
+    let confirmDelete =
+    confirm("Delete this product?");
+
+    if(!confirmDelete) return;
+
+    const response =
+    await fetch(
+    "http://localhost:5000/delete-product/" + id,
+    {
+        method:"DELETE"
+    });
+
+    const data =
+    await response.json();
+
+    alert(data.message);
+
+    loadProducts();
+}
+
+async function loadLogins(){
+
+    const response =
+    await fetch(
+    "http://localhost:5000/login-history"
+    );
+
+    const data =
+    await response.json();
+
+    let html = "";
+
+    data.forEach(item => {
+
+        html += `
+        <tr>
+            <td>${item.email}</td>
+            <td>${new Date(item.loginTime).toLocaleString()}</td>
+        </tr>
+        `;
+    });
+
+    document.getElementById(
+        "loginTable"
+    ).innerHTML = html;
+}
+
+async function loadCustomers(){
+
+    const response =
+    await fetch(
+    "http://localhost:5000/users"
+    );
+
+    const users =
+    await response.json();
+
+    let html = "";
+
+    users.forEach(user => {
+
+        html += `
+        <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+        </tr>
+        `;
+    });
+
+    document.getElementById(
+        "customerTable"
+    ).innerHTML = html;
+}
+async function loadProducts(){
+
+    const response =
+    await fetch(
+    "http://localhost:5000/products"
+    );
+
+    const products =
+    await response.json();
+
+    let html = "";
+
+    products.forEach(product => {
+
+    html += `
+    <div class="product">
+
+        <img src="${product.image}" alt="">
+
+        <h3>${product.name}</h3>
+
+        <p>Category: ${product.category}</p>
+
+        <p>Price: ₹${product.price}</p>
+        <button
+        onclick="deleteProduct('${product._id}')">
+            Delete Product
+        </button>
+
+    </div>
+    `;
+});
+
+    document.getElementById(
+        "productList"
+    ).innerHTML = html;
+}
+
+loadProducts();
+loadLogins();
+loadCustomers();
+
+</script>
+
+</body>
+</html>
