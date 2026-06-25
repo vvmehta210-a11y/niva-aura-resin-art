@@ -7,7 +7,7 @@ async function sendOTP(){
 
     const response =
     await fetch(
-    "http://localhost:5000/send-otp",
+    "https://niva-aura-resin-art.onrender.com/send-otp",
     {
         method:"POST",
 
@@ -37,7 +37,7 @@ async function verifyOTP(){
 
     const response =
     await fetch(
-    "http://localhost:5000/verify-otp",
+    "https://niva-aura-resin-art.onrender.com/verify-otp",
     {
         method:"POST",
 
@@ -79,7 +79,7 @@ async function createAccount(){
 
     const response =
     await fetch(
-    "http://localhost:5000/signup",
+    "https://niva-aura-resin-art.onrender.com/signup",
     {
         method:"POST",
 

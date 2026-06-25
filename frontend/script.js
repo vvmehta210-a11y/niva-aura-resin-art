@@ -92,7 +92,7 @@ async function loadProducts(){
 
     const response =
     await fetch(
-    "http://localhost:5000/products"
+    "https://niva-aura-resin-art.onrender.com/products"
     );
 
     const products =
@@ -202,7 +202,7 @@ async function submitReview(){
 
     const response =
     await fetch(
-    "http://localhost:5000/review",
+    "https://niva-aura-resin-art.onrender.com/review",
     {
         method:"POST",
         headers:{
@@ -228,7 +228,7 @@ async function loadReviews(){
 
     const response =
     await fetch(
-    "http://localhost:5000/reviews/Niva Aura"
+    "https://niva-aura-resin-art.onrender.com/reviews/Niva Aura"
     );
 
     const reviews =
@@ -265,7 +265,7 @@ async function loadReviews(){
 
     const response =
     await fetch(
-    "http://localhost:5000/reviews/" +
+    "https://niva-aura-resin-art.onrender.com/reviews/" +
     product
     );
 

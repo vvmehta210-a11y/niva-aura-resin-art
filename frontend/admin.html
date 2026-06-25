@@ -187,7 +187,7 @@ formData.append(
 
 const uploadResponse =
 await fetch(
-"http://localhost:5000/upload",
+"https://niva-aura-resin-art.onrender.com/upload",
 {
     method:"POST",
     body:formData
@@ -197,12 +197,12 @@ const uploadData =
 await uploadResponse.json();
 
 const image =
-"http://localhost:5000/uploads/" +
+"https://niva-aura-resin-art.onrender.com/uploads/" +
 uploadData.filename;
 
 const response =
 await fetch(
-"http://localhost:5000/add-product",
+"https://niva-aura-resin-art.onrender.com/add-product",
 {
     method:"POST",
 
@@ -241,7 +241,7 @@ async function deleteProduct(id){
 
     const response =
     await fetch(
-    "http://localhost:5000/delete-product/" + id,
+    "https://niva-aura-resin-art.onrender.com/delete-product/" + id,
     {
         method:"DELETE"
     });
@@ -258,7 +258,7 @@ async function loadLogins(){
 
     const response =
     await fetch(
-    "http://localhost:5000/login-history"
+    "https://niva-aura-resin-art.onrender.com/login-history"
     );
 
     const data =
@@ -285,7 +285,7 @@ async function loadCustomers(){
 
     const response =
     await fetch(
-    "http://localhost:5000/users"
+    "https://niva-aura-resin-art.onrender.com/users"
     );
 
     const users =
@@ -311,7 +311,7 @@ async function loadProducts(){
 
     const response =
     await fetch(
-    "http://localhost:5000/products"
+    "https://niva-aura-resin-art.onrender.com/products"
     );
 
     const products =

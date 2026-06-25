@@ -67,6 +67,24 @@
         No Payment Method Selected
     </p>
 
+    <div id="upiSection" style="display:none; text-align:center;">
+
+    <h3>Scan QR Code</h3>
+
+    <img
+    src="images/upi-qr.jpg"
+    width="250">
+
+    <p>
+        After payment click Confirm Payment
+    </p>
+
+    <button onclick="confirmUPIPayment()">
+        Confirm Payment
+    </button>
+
+</div>
+
     <button onclick="processPayment()">
         Pay Now
     </button>
@@ -82,7 +100,20 @@ function selectPayment(method){
     paymentMethod = method;
 
     document.getElementById("selectedMethod").innerHTML =
-        "Selected: " + method;
+    "Selected: " + method;
+
+    if(method === "UPI"){
+        document.getElementById("upiSection").style.display = "block";
+    }else{
+        document.getElementById("upiSection").style.display = "none";
+    }
+}
+
+async function confirmUPIPayment(){
+
+    alert("Payment Confirmed");
+
+    await processPayment();
 }
 
 async function processPayment(){
@@ -97,7 +128,8 @@ async function processPayment(){
 
     const response =
     await fetch(
-    "http://localhost:5000/order",
+    "https://niva-aura-resin-art.onrender.com/order",
+
     {
         method:"POST",
 
