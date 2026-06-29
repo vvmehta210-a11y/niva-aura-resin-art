@@ -55,10 +55,7 @@ app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100
 }));
-app.use(
-    "/uploads",
-    express.static("uploads")
-);
+app.use("/uploads", express.static(uploadDir));
 
 app.use(cors());
 app.use(express.json());
@@ -66,30 +63,36 @@ app.use(express.json());
 /* =========================
    Image Upload
 ========================= */
-
-const storage = multer.diskStorage({
-
-    destination: (req, file, cb) => {
-    cb(null, uploadDir);
-},
-
-    filename: (req, file, cb) => {
-        cb(
-            null,
-            Date.now() +
-            path.extname(file.originalname)
-        );
-    }
-});
+/****************************
+ Image Upload
+****************************/
 
 const uploadDir = path.join(__dirname, "uploads");
 
+// Create uploads folder if it doesn't exist
 if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const upload = multer({ storage });
+// Serve uploaded images
+app.use("/uploads", express.static(uploadDir));
 
+const storage = multer.diskStorage({
+
+    destination: function (req, file, cb) {
+        cb(null, uploadDir);
+    },
+
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            Date.now() + path.extname(file.originalname)
+        );
+    }
+
+});
+
+const upload = multer({ storage });
 /* =========================
    Home Route
 ========================= */
