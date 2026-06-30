@@ -105,19 +105,19 @@ app.get("/", (req, res) => {
    Upload Route
 ========================= */
 
-app.post(
-    "/upload",
-    upload.single("image"),
-    (req, res) => {
+app.post("/upload", upload.single("image"), (req, res) => {
 
-        res.json({
-            message:
-            "Image uploaded successfully",
-            filename:
-            req.file.filename
+    if (!req.file) {
+        return res.status(400).json({
+            message: "No image uploaded"
         });
     }
-);
+
+    res.json({
+        message: "Image uploaded successfully",
+        filename: req.file.filename
+    });
+});
 
 /* =========================
    User Signup
