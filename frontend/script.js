@@ -299,48 +299,13 @@ async function loadReviews(){
     ).innerHTML = html;
 }
 
-async function loadReviews(){
 
-    const product =
-    document.getElementById(
-    "productName"
-    ).innerText;
-
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/reviews/" +
-    product
-    );
-
-    const reviews =
-    await response.json();
-
-    let html = "";
-
-    reviews.forEach(item => {
-
-        html += `
-        <div class="product">
-
-            <h3>${item.user}</h3>
-
-            <p>Rating: ${item.rating}/5</p>
-
-            <p>${item.review}</p>
-
-        </div>
-        `;
-    });
-
-    document.getElementById(
-    "reviews"
-    ).innerHTML = html;
-}
 window.onload = function(){
 
     updateCartCount();
     loadProducts();
     loadUserProfile();
+    loadReviews();
 
 }
 
