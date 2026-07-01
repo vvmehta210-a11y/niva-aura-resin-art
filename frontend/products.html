@@ -90,15 +90,78 @@ async function submitReview(){
 
 <h1>Our Products</h1>
 
-<ul>
-<li>Resin Keychains</li>
-<li>Resin Coasters</li>
-<li>Wall Clocks</li>
-<li>Name Plates</li>
-<li>Customized Gifts</li>
-</ul>
+<div class="product">
+
+    <h3>Resin Keychains</h3>
+
+    <button onclick="buyNow('Resin Keychains')">
+        Buy Now
+    </button>
+
+</div>
+
+<div class="product">
+
+    <h3>Resin Coasters</h3>
+
+    <button onclick="buyNow('Resin Coasters')">
+        Buy Now
+    </button>
+
+</div>
+
+<div class="product">
+
+    <h3>Wall Clocks</h3>
+
+    <button onclick="buyNow('Wall Clocks')">
+        Buy Now
+    </button>
+
+</div>
+
+<div class="product">
+
+    <h3>Name Plates</h3>
+
+    <button onclick="buyNow('Name Plates')">
+        Buy Now
+    </button>
+
+</div>
+
+<div class="product">
+
+    <h3>Customized Gifts</h3>
+
+    <button onclick="buyNow('Customized Gifts')">
+        Buy Now
+    </button>
+
+</div>
 
 <a href="index.html">Back Home</a>
 
+<script>
+
+function buyNow(productName) {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+
+        alert("Please Login or Sign Up first to purchase this item.");
+
+        window.location.href = "login.html";
+
+        return;
+    }
+
+    localStorage.setItem("selectedProduct", productName);
+
+    window.location.href = "payment.html";
+}
+
+</script>
 </body>
 </html>

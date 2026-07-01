@@ -15,6 +15,7 @@ const Order = require("./models/Order");
 const User = require("./models/User");
 const LoginHistory = require("./models/LoginHistory");
 const app = express();
+app.set("trust proxy", 1);
 const Contact = require("./models/Contact");
 const Product = require("./models/Product");
 
