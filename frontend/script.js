@@ -125,7 +125,7 @@ async function loadProducts(){
     class="main-image"
     src="${product.images && product.images.length > 0
 ? product.images[0]
-: 'https://via.placeholder.com/250'}">
+: 'images/no-image.png'}">
 
     <div class="thumbnail-row">
 
@@ -341,7 +341,6 @@ window.onload = function(){
     updateCartCount();
     loadProducts();
     loadUserProfile();
-    loadReviews();
 
 }
 
