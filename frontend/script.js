@@ -123,12 +123,14 @@ async function loadProducts(){
     <img
     id="main-${product._id}"
     class="main-image"
-    src="${product.images[0]}">
+    src="${product.images && product.images.length > 0
+? product.images[0]
+: 'https://via.placeholder.com/250'}">
 
     <div class="thumbnail-row">
 
         ${
-        product.images.map(image => `
+            (product.images || []).map(image => `
             <img
             class="thumbnail"
             src="${image}"
@@ -140,13 +142,7 @@ async function loadProducts(){
 
 </div>
 
-function changeImage(mainId, image){
 
-    document
-    .getElementById(mainId)
-    .src = image;
-
-}
 
             <h3>${product.name}</h3>
 
@@ -163,6 +159,12 @@ function changeImage(mainId, image){
     document.getElementById("products")
     .innerHTML = html;
 }
+function changeImage(mainId, image){
+
+    document.getElementById(mainId).src = image;
+
+}
+
 function checkLoginStatus(){
 
     let token = localStorage.getItem("token");
