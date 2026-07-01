@@ -118,8 +118,36 @@ async function loadProducts(){
         html += `
         <div class="product">
 
-            <img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/250'}">
-            
+            <div class="image-gallery">
+
+    <img
+    id="main-${product._id}"
+    class="main-image"
+    src="${product.images[0]}">
+
+    <div class="thumbnail-row">
+
+        ${
+        product.images.map(image => `
+            <img
+            class="thumbnail"
+            src="${image}"
+            onclick="changeImage('main-${product._id}','${image}')">
+        `).join("")
+        }
+
+    </div>
+
+</div>
+
+function changeImage(mainId, image){
+
+    document
+    .getElementById(mainId)
+    .src = image;
+
+}
+
             <h3>${product.name}</h3>
 
             <p>₹${product.price}</p>

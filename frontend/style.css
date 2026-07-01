@@ -375,3 +375,53 @@ footer{
 .category-card:hover{
     transform:translateY(-10px);
 }
+.image-gallery{
+
+    text-align:center;
+
+}
+
+.main-image{
+
+    width:250px;
+    height:250px;
+    object-fit:cover;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
+
+}
+
+.thumbnail-row{
+
+    margin-top:10px;
+
+}
+
+.thumbnail{
+
+    width:60px;
+    height:60px;
+
+    object-fit:cover;
+
+    margin:5px;
+
+    cursor:pointer;
+
+    border:2px solid transparent;
+
+    border-radius:5px;
+
+    transition:.3s;
+
+}
+
+.thumbnail:hover{
+
+    border-color:#000;
+
+    transform:scale(1.05);
+
+}
