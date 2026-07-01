@@ -171,8 +171,11 @@ document.getElementById("category").value;
 let imageFiles =
 document.getElementById("image").files;
 
-if(name === "" || price === "" || !imageFile){
-
+if (
+    name === "" ||
+    price === "" ||
+    imageFiles.length === 0
+) {
     alert("Please Fill Product Details");
     return;
 }
@@ -326,8 +329,8 @@ async function loadProducts(){
     html += `
     <div class="product">
 
-        <img src="${product.image}" alt="">
-
+        <img src="${product.images[0]}" alt="">
+        
         <h3>${product.name}</h3>
 
         <p>Category: ${product.category}</p>
