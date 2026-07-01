@@ -94,9 +94,9 @@ async function submitReview(){
 
     <h3>Resin Keychains</h3>
 
-    <button onclick="buyNow('Resin Keychains')">
-        Buy Now
-    </button>
+    <button onclick="checkLogin('Resin Keychains')">
+    Buy Now
+</button>
 
 </div>
 
@@ -104,9 +104,9 @@ async function submitReview(){
 
     <h3>Resin Coasters</h3>
 
-    <button onclick="buyNow('Resin Coasters')">
-        Buy Now
-    </button>
+    <button onclick="checkLogin('Resin Coasters')">
+    Buy Now
+</button>
 
 </div>
 
@@ -114,9 +114,9 @@ async function submitReview(){
 
     <h3>Wall Clocks</h3>
 
-    <button onclick="buyNow('Wall Clocks')">
-        Buy Now
-    </button>
+    <button onclick="checkLogin('Wall Clocks')">
+    Buy Now
+</button>
 
 </div>
 
@@ -124,7 +124,7 @@ async function submitReview(){
 
     <h3>Name Plates</h3>
 
-    <button onclick="buyNow('Name Plates')">
+    <button onclick="checkLogin('Name Plates')">
         Buy Now
     </button>
 
@@ -134,7 +134,7 @@ async function submitReview(){
 
     <h3>Customized Gifts</h3>
 
-    <button onclick="buyNow('Customized Gifts')">
+    <button onclick="checkLogin('Customized Gifts')">
         Buy Now
     </button>
 
@@ -162,6 +162,24 @@ function buyNow(productName) {
     window.location.href = "payment.html";
 }
 
+</script>
+<script>
+function checkLogin(productName) {
+
+    const email = localStorage.getItem("email");
+
+    if (!email) {
+
+        alert("Please Sign Up or Login first to purchase this item.");
+
+        window.location.href = "login.html";
+        return;
+    }
+
+    localStorage.setItem("selectedProduct", productName);
+
+    window.location.href = "payment.html";
+}
 </script>
 </body>
 </html>

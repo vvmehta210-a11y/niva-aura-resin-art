@@ -18,8 +18,18 @@ function closePopup(){
 
     document.getElementById("popup").style.display="none";
 }
-
 function addToCart(){
+
+    // Check if user is logged in
+    const email = localStorage.getItem("email");
+
+    if(!email){
+
+        alert("Please Login or Sign Up first.");
+
+        window.location.href = "login.html";
+        return;
+    }
 
     let qty = document.getElementById("qty").value;
 
@@ -30,7 +40,7 @@ function addToCart(){
     };
 
     let cart =
-        JSON.parse(localStorage.getItem("cart")) || [];
+    JSON.parse(localStorage.getItem("cart")) || [];
 
     cart.push(item);
 
@@ -44,6 +54,9 @@ function addToCart(){
     closePopup();
 
     updateCartCount();
+
+    // Open cart automatically
+    window.location.href = "cart.html";
 }
 function updateCartCount(){
 
@@ -321,4 +334,22 @@ function addToWishlist(name,image,price){
     );
 
     alert("Added To Wishlist ❤️");
+}
+
+function checkLogin(productName) {
+
+    const email = localStorage.getItem("email");
+
+    if (!email) {
+
+        alert("Please Sign Up or Login first to purchase this item.");
+
+        window.location.href = "login.html";
+
+        return;
+    }
+
+    localStorage.setItem("selectedProduct", productName);
+
+    window.location.href = "payment.html";
 }
