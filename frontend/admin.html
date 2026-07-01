@@ -122,8 +122,8 @@ placeholder="Category">
 
 <input
 type="file"
-id="image">
-
+id="image"
+multiple>
 
 
 
@@ -168,8 +168,8 @@ document.getElementById("price").value;
 let category =
 document.getElementById("category").value;
 
-let imageFile =
-document.getElementById("image").files[0];
+let imageFiles =
+document.getElementById("image").files;
 
 if(name === "" || price === "" || !imageFile){
 
@@ -177,28 +177,30 @@ if(name === "" || price === "" || !imageFile){
     return;
 }
 
-let formData =
-new FormData();
+let imageUrls = [];
 
-formData.append(
-    "image",
-    imageFile
-);
+for(let i = 0; i < imageFiles.length; i++){
 
-const uploadResponse =
-await fetch(
-"https://niva-aura-resin-art.onrender.com/upload",
-{
-    method:"POST",
-    body:formData
-});
+    let formData = new FormData();
 
-const uploadData =
-await uploadResponse.json();
+    formData.append("image", imageFiles[i]);
 
-const image =
-"https://niva-aura-resin-art.onrender.com/uploads/" +
-uploadData.filename;
+    const uploadResponse =
+    await fetch(
+    "https://niva-aura-resin-art.onrender.com/upload",
+    {
+        method:"POST",
+        body:formData
+    });
+
+    const uploadData =
+    await uploadResponse.json();
+
+    imageUrls.push(
+        "https://niva-aura-resin-art.onrender.com/uploads/" +
+        uploadData.filename
+    );
+}
 
 const response =
 await fetch(
@@ -212,11 +214,11 @@ await fetch(
     },
 
     body:JSON.stringify({
-        name,
-        price,
-        image,
-        category
-    })
+    name,
+    price,
+    images: imageUrls,
+    category
+})
 });
 
 const data =

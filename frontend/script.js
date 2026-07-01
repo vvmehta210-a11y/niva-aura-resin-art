@@ -118,8 +118,8 @@ async function loadProducts(){
         html += `
         <div class="product">
 
-            <img src="${product.image || 'https://via.placeholder.com/250'}">
-
+            <img src="${product.images && product.images.length > 0 ? product.images[0] : 'https://via.placeholder.com/250'}">
+            
             <h3>${product.name}</h3>
 
             <p>₹${product.price}</p>
