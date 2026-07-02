@@ -21,24 +21,25 @@
 </table>
 
 <hr>
-<h1>Admin Login</h1>
+<div class="admin-container">
 
-<input type="text"
-id="username"
-placeholder="Username">
+    <h1>Admin Login</h1>
 
-<br><br>
+    <input
+        type="text"
+        id="username"
+        placeholder="Username">
 
-<input type="password"
-id="password"
-placeholder="Password">
+    <input
+        type="password"
+        id="password"
+        placeholder="Password">
 
-<br><br>
+    <button onclick="login()">
+        Login
+    </button>
 
-<button onclick="login()">
-Login
-</button>
-
+</div>
 <script>
 
 function login(){

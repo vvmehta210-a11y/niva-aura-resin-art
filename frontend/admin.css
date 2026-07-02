@@ -1,79 +1,70 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Poppins,sans-serif;
-}
-
 body{
-    background:#f4f6f9;
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#f5f7fa,#c3cfe2);
 }
 
 .admin-container{
-    width:420px;
-    margin:80px auto;
+    width:380px;
+    margin:60px auto;
     background:#fff;
     padding:35px;
     border-radius:15px;
-    box-shadow:0 10px 30px rgba(0,0,0,.15);
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
 }
 
 .admin-container h1{
     text-align:center;
-    margin-bottom:30px;
-    color:#222;
+    margin-bottom:25px;
 }
 
 .admin-container input{
     width:100%;
-    padding:14px;
-    margin-bottom:20px;
+    padding:12px;
+    margin:12px 0;
     border:1px solid #ddd;
     border-radius:8px;
     font-size:16px;
+    box-sizing:border-box;
 }
 
 .admin-container button{
     width:100%;
-    padding:14px;
-    background:#111;
-    color:white;
+    padding:12px;
     border:none;
+    background:#6c63ff;
+    color:white;
     border-radius:8px;
+    font-size:16px;
     cursor:pointer;
-    font-size:17px;
+    transition:.3s;
 }
 
 .admin-container button:hover{
-    background:#ff4d6d;
-}
-
-.history{
-    width:90%;
-    margin:40px auto;
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,.1);
-}
-
-.history h2{
-    margin-bottom:20px;
+    background:#5548e5;
 }
 
 table{
-    width:100%;
+    width:90%;
+    margin:30px auto;
     border-collapse:collapse;
+    background:white;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
 }
 
-table th{
-    background:#111;
+th{
+    background:#6c63ff;
     color:white;
     padding:12px;
 }
 
-table td{
-    padding:12px;
-    border-bottom:1px solid #ddd;
+td{
+    padding:10px;
     text-align:center;
+    border:1px solid #ddd;
+}
+
+h2{
+    text-align:center;
+    margin-top:30px;
 }
