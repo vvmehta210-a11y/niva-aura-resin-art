@@ -33,7 +33,9 @@ mongoose.connect(process.env.MONGO_URI)
 });
 const transporter = nodemailer.createTransport({
 
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
 
     auth: {
 
@@ -56,7 +58,7 @@ app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100
 }));
-app.use("/uploads", express.static(uploadDir));
+
 
 app.use(cors());
 app.use(express.json());
@@ -130,6 +132,7 @@ app.post("/signup", async (req, res) => {
 
         const {
             name,
+            lastName,
             email,
             password
         } = req.body;
@@ -168,6 +171,7 @@ if (password.length < 6) {
         const user = new User({
 
             name,
+            lastName,
             email,
             password:
             hashedPassword
