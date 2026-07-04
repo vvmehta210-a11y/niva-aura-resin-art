@@ -18,12 +18,6 @@ const app = express();
 app.set("trust proxy", 1);
 const Contact = require("./models/Contact");
 const Product = require("./models/Product");
-
-
-/* =========================
-   MongoDB Connection
-========================= */
-
 mongoose.connect(process.env.MONGO_URI)
 .then(() => {
     console.log("MongoDB Connected");
@@ -32,7 +26,9 @@ mongoose.connect(process.env.MONGO_URI)
     console.log(err);
 });
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
     auth: {
 
         user: process.env.EMAIL_USER,
@@ -40,43 +36,20 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
 
     }
-
 });
-
 let otpStore = {};
-
-/* =========================
-   Security Middleware
-========================= */
-
 app.use(helmet());
-
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100
 }));
-
-
 app.use(cors());
 app.use(express.json());
-
-/* =========================
-   Image Upload
-========================= */
-/****************************
- Image Upload
-****************************/
-
 const uploadDir = path.join(__dirname, "uploads");
-
-// Create uploads folder if it doesn't exist
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
-
-// Serve uploaded images
 app.use("/uploads", express.static(uploadDir));
-
 const storage = multer.diskStorage({
 
     destination: function (req, file, cb) {
@@ -89,21 +62,12 @@ const storage = multer.diskStorage({
             Date.now() + path.extname(file.originalname)
         );
     }
-
 });
 
 const upload = multer({ storage });
-/* =========================
-   Home Route
-========================= */
-
 app.get("/", (req, res) => {
     res.send("Niva Aura Resin Art API Run");
 });
-
-/* =========================
-   Upload Route
-========================= */
 
 app.post("/upload", upload.single("image"), (req, res) => {
 
@@ -118,11 +82,6 @@ app.post("/upload", upload.single("image"), (req, res) => {
         filename: req.file.filename
     });
 });
-
-/* =========================
-   User Signup
-========================= */
-
 app.post("/signup", async (req, res) => {
 
     try {
@@ -187,11 +146,6 @@ if (password.length < 6) {
         res.status(500).json(error);
     }
 });
-
-/* =========================
-   User Login
-========================= */
-
 app.post("/login", async (req, res) => {
 
     try {
@@ -232,7 +186,6 @@ app.post("/login", async (req, res) => {
     });
 }
 
-/* Save Login History */
 await LoginHistory.create({
     email: user.email
 });
@@ -258,9 +211,6 @@ const token = jwt.sign(
         res.status(500).json(error);
     }
 });
-/* =========================
-   Send OTP
-========================= */
 
 app.post("/send-otp", async (req, res) => {
 
@@ -304,10 +254,6 @@ app.post("/send-otp", async (req, res) => {
         });
     }
 });
-
-/* =========================
-   Verify OTP
-========================= */
 
 app.post("/verify-otp", (req, res) => {
 
