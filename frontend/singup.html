@@ -1,37 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Signup</title>
+    <title>Create Account</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
 </head>
-<body>
 
-<h2>Create Account</h2>
+<body class="auth-page">
 
-<input type="text" id="name" placeholder="Name">
+<div class="signup-container">
 
-<br><br>
+    <h1>Niva Aura Resin Art</h1>
+    <h2>Create Account</h2>
 
-<input type="email" id="email" placeholder="Email">
+    <div class="name-row">
 
-<br><br>
+    <input
+    type="text"
+    id="firstName"
+    placeholder="First Name">
 
-<input type="password" id="password" placeholder="Password">
+    <input
+    type="text"
+    id="lastName"
+    placeholder="Last Name">
 
-<br><br>
+</div>
+    <input
+    type="email"
+    id="email"
+    placeholder="Email Address">
 
-<button onclick="sendOTP()">
-Send OTP
+    <input
+    type="password"
+    id="password"
+    placeholder="Create Password"
+    onkeyup="checkPassword()">
+
+    <small id="passwordMessage"></small>
+
+    <input
+    type="password"
+    id="confirmPassword"
+    placeholder="Confirm Password">
+
+    <button class="otp-btn" onclick="sendOTP()">
+    Send OTP
 </button>
 
-<br><br>
+<input
+type="text"
+id="otp"
+placeholder="Enter OTP">
 
-<input type="text" id="otp" placeholder="Enter OTP">
-
-<br><br>
-
-<button onclick="verifyOTP()">
-Verify OTP & Create Account
+<button class="signup-btn" onclick="verifyOTP()">
+    Create Account
 </button>
+
+<p class="login-text">
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+</div>
 
 <script src="signup.js"></script>
 

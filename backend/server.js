@@ -367,7 +367,7 @@ app.post("/order", async (req,res)=>{
 
     }catch(error){
 
-        console.log(error);
+        console.error("OTP Error:", error);
 
         res.status(500).json(error);
 
