@@ -220,7 +220,7 @@ const token = jwt.sign(
     }
 });
 
-app.post("/send-otp", async (req, res) => {
+app.get("/send-otp", async (req, res) => {
 
     try {
 
