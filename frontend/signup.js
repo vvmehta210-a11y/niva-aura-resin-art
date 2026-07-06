@@ -37,48 +37,55 @@ function checkPassword(){
 
 let verified = false;
 
-async function sendOTP(){
+async function sendOTP() {
 
     console.log("Send OTP button clicked");
 
-    let email =
-    document.getElementById("email").value.trim();
+    let email = document.getElementById("email").value.trim();
 
-    if(email==""){
-
+    if (email === "") {
         alert("Please enter your email.");
         return;
     }
-    const emailPattern =
-/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-if(!emailPattern.test(email)){
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    alert("Please enter a valid email address.");
-    return;
+    if (!emailPattern.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            "https://niva-aura-resin-art.onrender.com/send-otp",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email })
+            }
+        );
+
+        const data = await response.json();
+
+        console.log("Response:", data);
+
+        if (!response.ok) {
+            alert(data.message || "Server Error");
+            return;
+        }
+
+        alert(data.message);
+
+    } catch (error) {
+
+        console.error("Fetch Error:", error);
+        alert("Cannot connect to backend server.");
+
+    }
 }
-
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/send-otp",
-    {
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-            email
-        })
-    });
-
-    const data =
-    await response.json();
-
-    alert(data.message);
-}
-
 async function verifyOTP(){
 
     let email =
