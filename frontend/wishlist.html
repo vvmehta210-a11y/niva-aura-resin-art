@@ -1,45 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Wishlist</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - Niva Aura Resin Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .wishlist-wrapper {
+            max-width: 1280px;
+            margin: 50px auto 80px;
+            padding: 0 24px;
+        }
+
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+            margin-top: 30px;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>My Wishlist ❤️</h1>
+    <!-- Header Navigation -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Niva Aura Logo">
+            <div class="logo-text">
+                <h2>Niva Aura</h2>
+                <span>Resin Studio</span>
+            </div>
+        </a>
 
-<div id="wishlistItems"></div>
+        <div class="header-right">
+            <div id="userProfile"></div>
+            <div class="cart-btn-wrapper">
+                <button class="cart-icon-btn" onclick="goToCart()">
+                    🛒 <span>Cart</span>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-<script>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="products.html">🛍️ Products</a>
+        <a href="gallery.html">🖼️ Gallery</a>
+        <a href="about.html">ℹ️ About Studio</a>
+        <a href="contact.html">📞 Contact & Custom</a>
+        <a href="wishlist.html" class="active">❤️ Wishlist</a>
+        <a href="checkout.html">💳 Checkout</a>
+    </nav>
 
-let wishlist =
-JSON.parse(
-localStorage.getItem("wishlist")
-) || [];
+    <!-- Wishlist Wrapper -->
+    <div class="wishlist-wrapper">
+        <h1 style="font-size: 36px; font-weight: 800; color: var(--deep-teal); text-align: center;">My Saved Wishlist ❤️</h1>
+        <p style="color: var(--text-muted); text-align: center; margin-top: 6px;">Your favorite resin art pieces saved for later</p>
 
-let html="";
+        <div id="wishlistItems" class="wishlist-grid"></div>
+    </div>
 
-wishlist.forEach(item=>{
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Niva Aura Resin Art</h3>
+                <p>Handcrafted resin artwork and luxury bespoke home decor.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <p>📧 nivaaura@gmail.com</p>
+                <p>📞 +91 98765 43210</p>
+            </div>
+            <div class="footer-col">
+                <h3>Location</h3>
+                <p>📍 Ahmedabad, Gujarat, India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
 
-html += `
-<div class="product">
+    <script src="script.js"></script>
+    <script>
+        function renderWishlist() {
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            let container = document.getElementById("wishlistItems");
 
-<img src="${item.image}" width="200">
+            if (wishlist.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 16px; box-shadow: var(--shadow-soft);">
+                        <h3 style="font-size: 20px; color: var(--deep-teal); margin-bottom: 8px;">Your Wishlist is Empty ❤️</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 20px;">Explore products and tap the heart icon to save favorites here.</p>
+                        <a href="products.html" class="btn-primary">Explore Products</a>
+                    </div>
+                `;
+                return;
+            }
 
-<h3>${item.name}</h3>
+            let html = "";
+            wishlist.forEach((item, index) => {
+                let img = item.image || "images/resin_wall_clock.png";
+                html += `
+                    <div class="product-card">
+                        <div class="product-image-box">
+                            <img src="${img}" alt="${item.name}">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">${item.name}</h3>
+                            <div class="product-bottom">
+                                <div class="product-price">&#8377;${Number(item.price).toLocaleString('en-IN')}</div>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="btn-add-cart" onclick="quickAddToCartFromWishlist('${item.name}', ${item.price}, '${img}')">🛒 Add</button>
+                                    <button class="btn-icon" title="Remove" onclick="removeFromWishlist(${index})">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
 
-<p>₹${item.price}</p>
+            container.innerHTML = html;
+        }
 
-</div>
-`;
+        function removeFromWishlist(index) {
+            let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+            wishlist.splice(index, 1);
+            localStorage.setItem("wishlist", JSON.stringify(wishlist));
+            renderWishlist();
+        }
 
-});
+        function quickAddToCartFromWishlist(name, price, img) {
+            addToCartItem({
+                product: name,
+                price: price,
+                image: img,
+                quantity: 1
+            });
+        }
 
-document.getElementById(
-"wishlistItems"
-).innerHTML = html;
-
-</script>
-
+        document.addEventListener("DOMContentLoaded", renderWishlist);
+    </script>
 </body>
+
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>All Users</title>
 </head>
 <body>
@@ -24,28 +25,40 @@
 
 async function loadUsers(){
 
-    const response =
-    await fetch("https://niva-aura-resin-art.onrender.com/users");
+    const token = localStorage.getItem("adminToken");
+    try {
+        const response = await fetch("http://localhost:5000/users", {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
-    const users =
-    await response.json();
+        if (!response.ok) {
+            console.error("Failed to load users");
+            return;
+        }
 
-    let html = "";
+        const users = await response.json();
 
-    users.forEach(user => {
+        let html = "";
 
-        html += `
-        <tr>
-            <td>${user.name}</td>
-            <td>${user.email}</td>
-        </tr>
-        `;
+        users.forEach(user => {
 
-    });
+            html += `
+            <tr>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+            </tr>
+            `;
 
-    document.getElementById(
-        "userTable"
-    ).innerHTML = html;
+        });
+
+        document.getElementById(
+            "userTable"
+        ).innerHTML = html;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 loadUsers();

@@ -1,163 +1,395 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>My Account</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account & Orders – Niva Aura Resin Art</title>
+    <meta name="description" content="Track your Niva Aura orders, view order history and manage your account.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .acc-wrapper { max-width:1100px; margin:40px auto 80px; padding:0 24px; display:grid; grid-template-columns:1fr 300px; gap:28px; }
+        @media(max-width:800px){ .acc-wrapper{ grid-template-columns:1fr; } }
 
-<style>
+        .acc-card { background:white; border-radius:20px; box-shadow:var(--shadow-soft); border:1px solid #E2E8F0; overflow:hidden; }
+        .acc-card-header { background:linear-gradient(135deg, var(--deep-teal), #155E75); padding:24px 28px; }
+        .acc-card-header h2 { font-size:20px; font-weight:800; color:white; }
+        .acc-card-header p  { font-size:13px; color:rgba(255,255,255,.75); margin-top:4px; }
+        .acc-card-body { padding:24px 28px; }
 
-body{
-    font-family:Arial,sans-serif;
-    margin:50px;
-}
+        /* Profile sidebar */
+        .profile-avatar { width:80px; height:80px; border-radius:50%; background:var(--deep-teal); color:var(--primary-gold); font-size:32px; font-weight:800; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; border:3px solid var(--primary-gold); }
+        .profile-label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); font-weight:700; }
+        .profile-value { font-size:15px; font-weight:700; color:var(--text-primary); margin-bottom:14px; }
+        .profile-section { text-align:center; padding:28px; }
 
-.container{
-    display:flex;
-    justify-content:space-between;
-    margin-top:50px;
-}
+        /* Tabs */
+        .tabs { display:flex; border-bottom:2px solid #F1F5F9; }
+        .tab-btn { padding:14px 24px; font-size:14px; font-weight:700; color:var(--text-muted); border:none; background:none; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; transition:.2s; }
+        .tab-btn.active { color:var(--deep-teal); border-bottom-color:var(--deep-teal); }
 
-.left{
-    width:50%;
-}
+        /* Order cards */
+        .order-item { border:1px solid #E2E8F0; border-radius:16px; margin-bottom:16px; overflow:hidden; }
+        .order-item-header { background:#F8FAFC; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; border-bottom:1px solid #E2E8F0; }
+        .order-id-txt { font-size:13px; font-weight:800; color:var(--deep-teal); }
+        .order-date-txt{ font-size:11px; color:var(--text-muted); margin-top:2px; }
+        .order-status-pill { font-size:11px; font-weight:800; padding:4px 14px; border-radius:20px; text-transform:uppercase; }
+        .sp-pending    { background:#FEF3C7; color:#92400E; }
+        .sp-confirmed  { background:#DBEAFE; color:#1E40AF; }
+        .sp-processing { background:#EDE9FE; color:#6D28D9; }
+        .sp-packed     { background:#FEF3C7; color:#B45309; }
+        .sp-shipped    { background:#E0F2FE; color:#0369A1; }
+        .sp-outfordelivery { background:#FFF7ED; color:#C2410C; }
+        .sp-delivered  { background:#DCFCE7; color:#15803D; }
+        .sp-cancelled  { background:#FEE2E2; color:#991B1B; }
+        .sp-returned   { background:#F1F5F9; color:#475569; }
 
-.right{
-    width:30%;
-}
+        .order-item-body { padding:16px 20px; }
+        .order-products-row { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+        .order-prod-chip { display:flex; align-items:center; gap:10px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:10px; padding:10px 14px; }
+        .order-prod-img { width:48px; height:48px; border-radius:8px; object-fit:cover; }
+        .order-prod-name{ font-size:13px; font-weight:700; color:var(--deep-teal); }
+        .order-prod-qty { font-size:11px; color:var(--text-muted); }
 
-h1{
-    text-align:center;
-}
+        .order-meta-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+        .order-total { font-size:18px; font-weight:800; color:var(--deep-teal); }
+        .order-method{ font-size:12px; color:var(--text-muted); }
 
-button{
-    padding:12px 25px;
-    cursor:pointer;
-    margin-top:20px;
-}
+        /* Track button */
+        .track-btn {
+            background:linear-gradient(135deg, var(--deep-teal), #155E75);
+            color:white; border:none; border-radius:10px;
+            padding:9px 20px; font-size:13px; font-weight:700;
+            cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif;
+            transition:.2s;
+        }
+        .track-btn:hover { transform:translateY(-1px); }
 
-</style>
+        /* Tracking modal */
+        .modal-bg {
+            position:fixed; inset:0; background:rgba(0,0,0,.55);
+            backdrop-filter:blur(6px); z-index:1000;
+            display:none; align-items:flex-start; justify-content:center;
+            padding:24px; overflow-y:auto;
+        }
+        .modal-bg.open { display:flex; }
+        .track-modal {
+            background:white; border-radius:24px; width:100%; max-width:580px;
+            margin:auto; padding:32px;
+            box-shadow:0 20px 60px rgba(0,0,0,.3);
+            animation:slideDown .3s ease;
+        }
+        @keyframes slideDown { from { transform:translateY(-20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+        .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+        .modal-header h3 { font-size:20px; font-weight:800; color:var(--deep-teal); }
+        .modal-close { background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-muted); }
 
+        /* Timeline */
+        .timeline { position:relative; padding-left:32px; }
+        .timeline::before { content:''; position:absolute; left:11px; top:0; bottom:0; width:2px; background:#E2E8F0; }
+        .tl-item { position:relative; margin-bottom:24px; }
+        .tl-dot {
+            position:absolute; left:-32px; top:2px;
+            width:22px; height:22px; border-radius:50%;
+            background:#E2E8F0; border:2px solid white;
+            display:flex; align-items:center; justify-content:center;
+            font-size:10px;
+        }
+        .tl-item.done .tl-dot { background:var(--deep-teal); color:white; }
+        .tl-item.active .tl-dot { background:var(--primary-gold); color:#111; box-shadow:0 0 0 4px rgba(212,175,55,.25); }
+        .tl-status { font-size:14px; font-weight:800; color:var(--deep-teal); }
+        .tl-msg    { font-size:12px; color:var(--text-muted); margin-top:2px; }
+        .tl-time   { font-size:11px; color:var(--text-muted); margin-top:2px; }
+
+        /* Pending steps (not yet done) */
+        .tl-item.upcoming .tl-status { color:#CBD5E1; }
+        .tl-item.upcoming .tl-msg    { color:#E2E8F0; }
+
+        /* Delivery info in modal */
+        .delivery-info-box { background:#F0FDF4; border:1.5px solid #A7F3D0; border-radius:14px; padding:16px; margin-top:20px; }
+        .delivery-info-box h4 { font-size:14px; font-weight:800; color:#15803D; margin-bottom:6px; }
+        .delivery-info-box p  { font-size:13px; color:#374151; line-height:1.7; }
+
+        /* OTP display for customer */
+        .customer-otp-box { background:#FEF3C7; border:1.5px solid #F59E0B; border-radius:14px; padding:16px; margin-top:12px; text-align:center; }
+        .customer-otp-box h4 { font-size:13px; font-weight:800; color:#92400E; margin-bottom:6px; }
+        .customer-otp-val { font-size:36px; font-weight:800; letter-spacing:8px; color:#B45309; }
+        .customer-otp-note { font-size:11px; color:#92400E; margin-top:6px; }
+
+        /* Empty state */
+        .empty-box { text-align:center; padding:48px 20px; }
+        .empty-box .e-icon { font-size:56px; margin-bottom:16px; }
+        .empty-box h3 { font-size:20px; font-weight:800; color:var(--deep-teal); margin-bottom:8px; }
+        .empty-box p  { font-size:14px; color:var(--text-muted); margin-bottom:20px; }
+        .empty-box a  { text-decoration:none; }
+
+        /* Logout btn */
+        .logout-btn { width:100%; padding:13px; background:#FEE2E2; color:#991B1B; border:none; border-radius:12px; font-size:14px; font-weight:800; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:.2s; }
+        .logout-btn:hover { background:#DC2626; color:white; }
+    </style>
 </head>
 <body>
 
-<h1>My Account</h1>
+<!-- Header -->
+<header class="header">
+    <a href="index.html" class="logo">
+        <img src="images/logo.png" alt="Niva Aura Logo">
+        <div class="logo-text"><h2>Niva Aura</h2><span>Resin Studio</span></div>
+    </a>
+    <div class="header-right">
+        <div id="userProfile"></div>
+        <div class="cart-btn-wrapper">
+            <button class="cart-icon-btn" onclick="goToCart()">🛒 <span>Cart</span><span id="cartCount" class="cart-badge">0</span></button>
+        </div>
+    </div>
+</header>
+<nav>
+    <a href="index.html">🏠 Home</a>
+    <a href="products.html">🛍️ Products</a>
+    <a href="gallery.html">🖼️ Gallery</a>
+    <a href="about.html">ℹ️ About Studio</a>
+    <a href="contact.html">📞 Contact & Custom</a>
+    <a href="wishlist.html">❤️ Wishlist</a>
+    <a href="checkout.html">💳 Checkout</a>
+</nav>
 
-<div class="container">
+<div class="acc-wrapper">
 
-    <div class="left">
+    <!-- LEFT: ORDERS -->
+    <div class="acc-card">
+        <div class="acc-card-header">
+            <h2>📦 My Orders</h2>
+            <p>Real-time order tracking from confirmation to delivery</p>
+        </div>
+        <div style="padding:0 0 0 0;">
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterOrders('All', this)">All Orders</button>
+                <button class="tab-btn" onclick="filterOrders('Pending', this)">Pending</button>
+                <button class="tab-btn" onclick="filterOrders('Shipped', this)">Shipped</button>
+                <button class="tab-btn" onclick="filterOrders('Delivered', this)">Delivered</button>
+            </div>
+            <div class="acc-card-body">
+                <div id="ordersContainer">
+                    <div class="empty-box"><div class="e-icon">⏳</div><h3>Loading your orders…</h3></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h2>Order History</h2>
+    <!-- RIGHT: PROFILE -->
+    <div>
+        <div class="acc-card">
+            <div class="profile-section">
+                <div class="profile-avatar" id="avatarInitial">U</div>
+                <div class="profile-label">Account Name</div>
+                <div class="profile-value" id="displayName">Guest</div>
+                <div class="profile-label">Email Address</div>
+                <div class="profile-value" id="displayEmail" style="font-size:13px; font-weight:600;">—</div>
+                <button class="logout-btn" onclick="logout()">Log Out 🚪</button>
+            </div>
+        </div>
 
-    <div id="orders"></div>
-
-</div>
-
-    <div class="right">
-
-        <h2>Account Details</h2>
-
-        <p>
-            <strong>Name:</strong>
-            <span id="userName"></span>
-        </p>
-
-        <p>
-            <strong>Email:</strong>
-            <span id="userEmail"></span>
-        </p>
-
-        <p>
-            India
-        </p>
-
-        <button onclick="logout()">
-            LOG OUT
-        </button>
-
+        <div class="acc-card" style="margin-top:20px; padding:20px 24px;">
+            <div style="font-size:14px; font-weight:800; color:var(--deep-teal); margin-bottom:14px;">🔗 Quick Links</div>
+            <a href="products.html" style="display:block; padding:10px 0; border-bottom:1px solid #F1F5F9; color:#374151; text-decoration:none; font-size:14px; font-weight:600;">🛍️ Continue Shopping</a>
+            <a href="checkout.html" style="display:block; padding:10px 0; border-bottom:1px solid #F1F5F9; color:#374151; text-decoration:none; font-size:14px; font-weight:600;">💳 Checkout</a>
+            <a href="wishlist.html" style="display:block; padding:10px 0; color:#374151; text-decoration:none; font-size:14px; font-weight:600;">❤️ Wishlist</a>
+        </div>
     </div>
 
 </div>
 
+<!-- TRACKING MODAL -->
+<div class="modal-bg" id="trackModal" onclick="closeTrackModal(event)">
+    <div class="track-modal">
+        <div class="modal-header">
+            <h3>📍 Order Tracking</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div id="trackContent">Loading…</div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-container">
+        <div class="footer-col"><h3>Niva Aura Resin Art</h3><p>Handcrafted resin artwork and bespoke luxury decor.</p></div>
+        <div class="footer-col"><h3>Navigation</h3><ul class="footer-links"><li><a href="index.html">Home</a></li><li><a href="products.html">Products</a></li><li><a href="checkout.html">Checkout</a></li></ul></div>
+        <div class="footer-col"><h3>Contact</h3><p>📧 nivaaura@gmail.com</p><p>📞 +91 98765 43210</p></div>
+        <div class="footer-col"><h3>Location</h3><p>📍 Ahmedabad, Gujarat, India</p></div>
+    </div>
+    <div class="footer-bottom"><p>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</p></div>
+</footer>
+
+<script src="script.js"></script>
 <script>
+const API = "http://localhost:5000";
+let allOrders = [];
+let currentFilter = "All";
 
-let userName =
-localStorage.getItem("name");
+// Profile
+const userName  = localStorage.getItem("name")  || "Resin Collector";
+const userEmail = localStorage.getItem("email") || "";
+document.getElementById("displayName").textContent  = userName;
+document.getElementById("displayEmail").textContent = userEmail;
+document.getElementById("avatarInitial").textContent = userName.charAt(0).toUpperCase();
 
-let userEmail =
-localStorage.getItem("email");
+// Load orders on ready
+document.addEventListener("DOMContentLoaded", loadOrders);
 
-document.getElementById(
-"userName"
-).innerText = userName || "Guest";
+async function loadOrders() {
+    const token = localStorage.getItem("token");
+    const container = document.getElementById("ordersContainer");
+    if (!token || !userEmail) {
+        container.innerHTML = `<div class="empty-box"><div class="e-icon">🔐</div><h3>Please log in</h3><p>Log in to see your order history.</p><a href="login.html" class="btn-primary">Log In</a></div>`;
+        return;
+    }
+    try {
+        const res  = await fetch(`${API}/orders/${userEmail}`, { headers:{ "Authorization":"Bearer " + token } });
+        if (!res.ok) { container.innerHTML = `<div class="empty-box"><div class="e-icon">⚠️</div><h3>Could not load orders</h3><p>Please try refreshing.</p></div>`; return; }
+        allOrders = await res.json();
+        renderOrders(allOrders);
+    } catch {
+        container.innerHTML = `<div class="empty-box"><div class="e-icon">🔴</div><h3>Server unreachable</h3><p>Make sure the backend is running.</p></div>`;
+    }
+}
 
-document.getElementById(
-"userEmail"
-).innerText = userEmail || "-";
+function filterOrders(status, btn) {
+    currentFilter = status;
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const filtered = status === "All" ? allOrders : allOrders.filter(o => o.status === status);
+    renderOrders(filtered);
+}
 
-async function loadOrders(){
-
-    let email =
-    localStorage.getItem("email");
-
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/orders/" +
-    email
-    );
-
-    const orders =
-    await response.json();
-
-    let html = "";
-
-    if(orders.length === 0){
-
-        html =
-        "<p>No Orders Found</p>";
-
-    }else{
-
-        orders.forEach(order => {
-
-            html += `
-            <div style="
-            border:1px solid #ddd;
-            padding:10px;
-            margin-bottom:10px;">
-
-                <h3>${order.product}</h3>
-
-                <p>₹${order.price}</p>
-
-                <p>Quantity:
-                ${order.quantity}</p>
-
-                <p>Status:
-                ${order.status}</p>
-
-            </div>
-            `;
-        });
+function renderOrders(orders) {
+    const container = document.getElementById("ordersContainer");
+    if (!orders || !orders.length) {
+        container.innerHTML = `<div class="empty-box"><div class="e-icon">📦</div><h3>No orders found</h3><p>You haven't placed any orders yet.</p><a href="products.html" class="btn-primary">Browse Products</a></div>`;
+        return;
     }
 
-    document.getElementById("orders")
-    .innerHTML = html;
+    container.innerHTML = orders.map(o => {
+        const status = o.status || "Pending";
+        const spCls  = "sp-" + status.replace(/\s+/g,"").toLowerCase();
+        const date   = new Date(o.date).toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" });
+        const total  = o.totalAmount || o.price || 0;
+
+        // Products chips
+        const prods = (o.products && o.products.length)
+            ? o.products.map(p => `
+                <div class="order-prod-chip">
+                    <img src="${p.image || "images/resin_wall_clock.png"}" class="order-prod-img" alt="${p.product}" onerror="this.src='images/resin_wall_clock.png'">
+                    <div><div class="order-prod-name">${p.product}</div><div class="order-prod-qty">Qty: ${p.quantity}</div></div>
+                </div>`).join("")
+            : `<div class="order-prod-chip"><img src="images/resin_wall_clock.png" class="order-prod-img" alt="${o.product}"><div><div class="order-prod-name">${o.product || "Product"}</div><div class="order-prod-qty">Qty: ${o.quantity || 1}</div></div></div>`;
+
+        return `
+        <div class="order-item">
+            <div class="order-item-header">
+                <div><div class="order-id-txt">🆔 ${o.orderId || o._id}</div><div class="order-date-txt">Placed: ${date}</div></div>
+                <span class="order-status-pill ${spCls}">${status}</span>
+            </div>
+            <div class="order-item-body">
+                <div class="order-products-row">${prods}</div>
+                <div class="order-meta-row">
+                    <div>
+                        <div class="order-total">₹${total.toLocaleString("en-IN")}</div>
+                        <div class="order-method">${o.paymentMethod || "—"} · ${o.paymentStatus || "Pending"}</div>
+                    </div>
+                    <button class="track-btn" onclick="openTrackModal('${o._id}', '${o.orderId || ""}')">📍 Track Order</button>
+                </div>
+            </div>
+        </div>`;
+    }).join("");
 }
 
-loadOrders();
+/* ── TRACKING MODAL ─────────────────────────── */
+function openTrackModal(mongoId, orderId) {
+    document.getElementById("trackModal").classList.add("open");
+    const contentEl = document.getElementById("trackContent");
+    contentEl.innerHTML = "<p style='color:#64748B;'>Loading tracking info…</p>";
 
-function logout(){
-
-    localStorage.removeItem("token");
-    localStorage.removeItem("name");
-    localStorage.removeItem("email");
-
-    alert("Logged Out");
-
-    window.location.href =
-    "login.html";
+    const order = allOrders.find(o => o._id === mongoId);
+    if (order) renderTrackModal(order);
 }
 
+function renderTrackModal(o) {
+    const contentEl = document.getElementById("trackContent");
+    const STATUS_STEPS = [
+        { key:"Pending",          icon:"📋", msg:"Order placed & awaiting confirmation" },
+        { key:"Confirmed",        icon:"✅", msg:"Order confirmed by Niva Aura team" },
+        { key:"Processing",       icon:"⚙️", msg:"Your resin art is being prepared" },
+        { key:"Packed",           icon:"📦", msg:"Packed securely for shipping" },
+        { key:"Shipped",          icon:"🚛", msg:"Handed over to courier" },
+        { key:"Out for Delivery", icon:"🏍️", msg:"Out for delivery with our partner" },
+        { key:"Delivered",        icon:"🏠", msg:"Delivered successfully" }
+    ];
+
+    const currentIdx = STATUS_STEPS.findIndex(s => s.key === o.status);
+    const trackingMap = {};
+    (o.trackingHistory || []).forEach(t => {
+        if (!trackingMap[t.status]) trackingMap[t.status] = t;
+    });
+
+    // Build timeline
+    let timelineHTML = STATUS_STEPS.map((step, i) => {
+        const isDone   = i < currentIdx;
+        const isActive = i === currentIdx;
+        const hist     = trackingMap[step.key];
+        const timeStr  = hist ? new Date(hist.timestamp).toLocaleString("en-IN") : "";
+        const msgStr   = hist ? hist.message : step.msg;
+        const cls      = isDone ? "done" : (isActive ? "active" : "upcoming");
+
+        return `
+        <div class="tl-item ${cls}">
+            <div class="tl-dot">${isDone ? "✓" : step.icon}</div>
+            <div class="tl-status">${step.key}</div>
+            <div class="tl-msg">${msgStr}</div>
+            ${timeStr ? `<div class="tl-time">⏰ ${timeStr}</div>` : ""}
+        </div>`;
+    }).join("");
+
+    // Delivery boy info
+    let deliveryHTML = "";
+    if (o.deliveryBoyName && (o.status === "Out for Delivery" || o.status === "Delivered")) {
+        deliveryHTML = `
+        <div class="delivery-info-box">
+            <h4>🏍️ Your Delivery Partner</h4>
+            <p><strong>${o.deliveryBoyName}</strong>${o.deliveryBoyMobile ? " · 📞 " + o.deliveryBoyMobile : ""}</p>
+        </div>`;
+    }
+
+    // OTP for customer (show when Out for Delivery)
+    let otpHTML = "";
+    if (o.status === "Out for Delivery" && o.deliveryOTP) {
+        otpHTML = `
+        <div class="customer-otp-box">
+            <h4>🔐 Your Delivery OTP – Share with delivery partner</h4>
+            <div class="customer-otp-val">${o.deliveryOTP}</div>
+            <div class="customer-otp-note">Only share this with the delivery partner at your door.</div>
+        </div>`;
+    }
+
+    contentEl.innerHTML = `
+        <div style="margin-bottom:16px;">
+            <div style="font-size:13px; font-weight:700; color:#374151;">Order ID: <span style="color:var(--deep-teal);">${o.orderId || o._id}</span></div>
+            <div style="font-size:12px; color:#64748B; margin-top:2px;">Placed on: ${new Date(o.date).toLocaleDateString("en-IN",{day:"numeric",month:"long",year:"numeric"})}</div>
+        </div>
+        <div class="timeline">${timelineHTML}</div>
+        ${deliveryHTML}
+        ${otpHTML}`;
+}
+
+function closeModal() { document.getElementById("trackModal").classList.remove("open"); }
+function closeTrackModal(e) { if (e.target === document.getElementById("trackModal")) closeModal(); }
+
+function logout() {
+    ["token","name","email","cart","customer","lastOrder"].forEach(k => localStorage.removeItem(k));
+    window.location.href = "login.html";
+}
 </script>
-
 </body>
 </html>

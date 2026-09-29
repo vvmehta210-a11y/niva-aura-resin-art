@@ -1,16 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Gallery</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resin Art Gallery - Flipkart Edition | Niva Aura</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<h1>Gallery</h1>
+    <!-- 1. Flipkart Header Bar -->
+    <div class="flipkart-header-wrap">
+        <header class="flipkart-header">
+            <a href="index.html" class="fk-logo">
+                <img src="images/logo.png" alt="Niva Aura Logo">
+                <div class="fk-logo-text">
+                    <h2>Niva Aura</h2>
+                    <span class="plus-tag">Explore <i>Resin Plus ✨</i></span>
+                </div>
+            </a>
 
-<p>Product photos will appear here.</p>
+            <div class="fk-search-box">
+                <input type="text" id="searchInput" placeholder="Search resin gallery photos..." onkeyup="searchProducts()">
+                <button title="Search">🔍</button>
+            </div>
 
-<a href="index.html">Back Home</a>
+            <div class="fk-header-actions">
+                <div id="userProfile"></div>
 
+                <a href="contact.html" class="fk-header-link">🎨 Custom Orders</a>
+                <a href="wishlist.html" class="fk-header-link">❤️ Wishlist</a>
+                <a href="admin-login.html" class="fk-header-link">⚙️ Admin</a>
+
+                <div class="fk-cart-btn" onclick="goToCart()">
+                    🛒 <span>Cart</span>
+                    <span id="cartCount" class="fk-cart-badge">0</span>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- Gallery Hero -->
+    <div class="gallery-hero">
+        <h1 style="font-size: 38px; font-weight: 800; color: var(--deep-teal);">Artisan Resin Gallery</h1>
+        <p style="color: var(--text-muted); margin-top: 8px;">Explore high-definition photography of our handcrafted resin masterpieces. Click any image to view details.</p>
+    </div>
+
+    <!-- Gallery Masonry Grid -->
+    <div class="gallery-grid">
+        <div class="gallery-item" onclick="openImageModal('p1')">
+            <img src="images/resin_wall_clock.png" alt="Ocean Wave Wall Clock">
+            <div class="gallery-overlay">
+                <h3>Ocean Wave Wall Clock</h3>
+                <p>🔍 Click to Inspect Photos & Details</p>
+            </div>
+        </div>
+
+        <div class="gallery-item" onclick="openImageModal('p2')">
+            <img src="images/resin_coasters.png" alt="Pressed Botanical Coasters">
+            <div class="gallery-overlay">
+                <h3>Pressed Botanical Coasters</h3>
+                <p>🔍 Click to Inspect Photos & Details</p>
+            </div>
+        </div>
+
+        <div class="gallery-item" onclick="openImageModal('p3')">
+            <img src="images/resin_wash_basin.png" alt="Emerald & Gold Wash Basin">
+            <div class="gallery-overlay">
+                <h3>Emerald & Gold Wash Basin</h3>
+                <p>🔍 Click to Inspect Photos & Details</p>
+            </div>
+        </div>
+
+        <div class="gallery-item" onclick="openImageModal('p4')">
+            <img src="images/resin_keychain.png" alt="Personalised Floral Keychain">
+            <div class="gallery-overlay">
+                <h3>Personalised Initial Keychain</h3>
+                <p>🔍 Click to Inspect Photos & Details</p>
+            </div>
+        </div>
+
+        <div class="gallery-item" onclick="openImageModal('p5')">
+            <img src="images/resin_nameplate.png" alt="Sapphire Desk Nameplate">
+            <div class="gallery-overlay">
+                <h3>Sapphire Desk Nameplate</h3>
+                <p>🔍 Click to Inspect Photos & Details</p>
+            </div>
+        </div>
+
+        <div class="gallery-item" onclick="openImageModal('p6')">
+            <img src="images/resin-bg.jpg" alt="Celestial Geode Artwork">
+            <div class="gallery-overlay">
+                <h3>Celestial Geode Resin Wall Art</h3>
+                <p>🔍 Click to Inspect Photos & Details</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Lightbox Image View Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="if(event.target === this) closeImageModal()">
+        <div class="lightbox-content">
+            <button class="modal-close-btn" onclick="closeImageModal()" title="Close (ESC)">&times;</button>
+
+            <div class="lightbox-gallery-side">
+                <div class="lightbox-main-img-wrap">
+                    <img id="modalMainImage" src="" alt="Product View">
+                </div>
+                <div class="lightbox-thumbnails" id="modalThumbnails"></div>
+            </div>
+
+            <div class="lightbox-details-side">
+                <span id="modalBadge" class="lightbox-badge">Resin Assured</span>
+                <h2 id="modalTitle" class="lightbox-title">Product Name</h2>
+                <div id="modalPrice" class="lightbox-price">&#8377;0</div>
+                <p id="modalDesc" class="lightbox-desc">Description text</p>
+
+                <div class="lightbox-specs">
+                    <h4>Artisan Craft Specifications</h4>
+                    <ul id="modalSpecsList"></ul>
+                </div>
+
+                <div class="lightbox-qty-row">
+                    <span style="font-weight: 700; color: var(--text-primary);">Quantity:</span>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                        <input type="number" id="modalQtyInput" class="qty-input" value="1" min="1" readonly>
+                        <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="lightbox-actions">
+                    <button class="btn-modal-cart" onclick="addModalProductToCart()">
+                        🛒 Add To Cart
+                    </button>
+                    <button class="btn-modal-buy" onclick="buyModalProductNow()">
+                        ⚡ Buy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flipkart Footer -->
+    <footer class="fk-footer">
+        <div class="fk-footer-grid">
+            <div class="fk-footer-col">
+                <h4>ABOUT US</h4>
+                <ul>
+                    <li><a href="about.html">About Niva Aura</a></li>
+                    <li><a href="products.html">Resin Collections</a></li>
+                </ul>
+            </div>
+            <div class="fk-footer-col">
+                <h4>HELP & SUPPORT</h4>
+                <ul>
+                    <li><a href="checkout.html">Payments & Shipping</a></li>
+                    <li><a href="contact.html">Custom Orders</a></li>
+                </ul>
+            </div>
+            <div class="fk-footer-col">
+                <h4>REGISTERED OFFICE ADDRESS</h4>
+                <p style="font-size: 12px; color: #878787;">
+                    Niva Aura Resin Art Studio, Ahmedabad, Gujarat 380001
+                </p>
+            </div>
+        </div>
+        <div class="fk-footer-bottom">
+            <span>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
+
 </html>

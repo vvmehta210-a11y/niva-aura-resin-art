@@ -1,304 +1,181 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Niva Aura Resin Art</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niva Aura Resin Art - Luxury Handmade Resin Artwork & Decor</title>
+    <meta name="description" content="Discover handcrafted luxury resin art products by Niva Aura. Ocean wave wall clocks, botanical coasters, emerald wash basins, initial keychains, and custom nameplates.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
+    <!-- Header Navigation -->
     <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Niva Aura Logo">
+            <div class="logo-text">
+                <h2>Niva Aura</h2>
+                <span>RESIN STUDIO</span>
+            </div>
+        </a>
 
-    <div class="logo">
-        <img src="images/logo.png" alt="Logo">
-        <div class="logo-text">
-            <h2>Niva Aura</h2>
-            <span>Resin Art</span>
+        <div class="header-right">
+            <div id="userProfile"></div>
+            <div class="cart-btn-wrapper">
+                <button class="cart-icon-btn" onclick="goToCart()">
+                    🛒 <span>Cart</span>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </button>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <div class="header-right">
-
-        <div id="userProfile"></div>
-
-        <div class="cart-box">
-            🛒 <span id="cartCount">0</span>
-
-            <button onclick="goToCart()">
-                View Cart
-            </button>
-        </div>
-
-    </div>
-
-</header>
-
-    <!-- Navigation -->
-
+    <!-- Navigation Bar -->
     <nav>
-
-
-
-<a href="index.html">🏠 Home</a>
-
-<a href="products.html">🛍 Products</a>
-
-<a href="gallery.html">🖼 Gallery</a>
-
-<a href="about.html">ℹ️ About</a>
-
-<a href="contact.html">📞 Contact</a>
-
-<a href="wishlist.html">❤️ Wishlist</a>
-
-<a href="login.html">👤 Login</a>
-
-<a href="admin-login.html">⚙️ Admin</a>
-
-</nav>
-
-    <!-- Heading -->
-
-    <div class="hero-section">
-
-    <h1>Niva Aura Resin Art</h1>
-
-    <h2>Welcome to Niva Aura Resin Art</h2>
-
-    <p>Handmade Resin Art Products</p>
-
-    <button class="hero-btn">
-        Contact Us
-    </button>
-
-</div>
-
-    <section class="categories">
-
-    <div class="category-card">
-        Wash Basins
-    </div>
-
-    <div class="category-card">
-        Wall Clocks
-    </div>
-
-    <div class="category-card">
-        Keychains
-    </div>
-
-    <div class="category-card">
-        Custom Gifts
-    </div>
-
-</section>
-
-<h2 class="section-title">
-Customer Reviews
-</h2>
-
-<div class="testimonials">
-
-    <div class="testimonial-card">
-        ⭐⭐⭐⭐⭐
-        <p>Beautiful resin keychain.</p>
-        <h4>- Priya</h4>
-    </div>
-
-    <div class="testimonial-card">
-        ⭐⭐⭐⭐⭐
-        <p>Amazing handmade clock.</p>
-        <h4>- Rahul</h4>
-    </div>
-
-    <div class="testimonial-card">
-        ⭐⭐⭐⭐⭐
-        <p>Excellent quality resin art.</p>
-        <h4>- Neha</h4>
-    </div>
-
-</div>
-
-<div class="newsletter">
-
-    <h2>Subscribe For Updates</h2>
-
-    <input
-    type="email"
-    placeholder="Enter Email">
-
-    <button>
-        Subscribe
-    </button>
-
-</div>
-
-<h2>Products</h2>
-
-<div style="text-align:center;margin:30px;">
-
-    <input
-    type="text"
-    id="searchInput"
-    placeholder="Search Products..."
-    onkeyup="searchProducts()">
-
-    <br><br>
-
-    <select
-    id="categoryFilter"
-    onchange="filterProducts()">
-
-        <option value="All">
-            All Categories
-        </option>
-
-        <option value="Keychains">
-            Keychains
-        </option>
-
-        <option value="Wall Clocks">
-            Wall Clocks
-        </option>
-
-        <option value="Wash Basins">
-            Wash Basins
-        </option>
-
-        <option value="Custom Gifts">
-            Custom Gifts
-        </option>
-
-    </select>
-
-</div>
-
-<div id="products"></div>
-
-
-<hr>
-
-<h2>Write Review</h2>
-
-<div style="text-align:center;">
-
-<select id="rating">
-    <option value="5">⭐⭐⭐⭐⭐</option>
-    <option value="4">⭐⭐⭐⭐</option>
-    <option value="3">⭐⭐⭐</option>
-    <option value="2">⭐⭐</option>
-    <option value="1">⭐</option>
-</select>
-
-<br><br>
-
-<textarea
-id="review"
-placeholder="Write your review"
-style="
-width:300px;
-height:100px;
-padding:10px;">
-</textarea>
-
-<br><br>
-
-<button onclick="submitReview()">
-Submit Review
-</button>
-
-</div>
-
-<hr>
-
-<h2>Customer Reviews</h2>
-
-<div id="reviews"></div>
-
-
-    <!-- Popup -->
-
-    <div id="popup" class="popup">
-
-        <div class="popup-content">
-
-            <h2 id="productName"></h2>
-
-            <p>Quantity</p>
-
-            <input
-            type="number"
-            id="qty"
-            value="1"
-            min="1">
-
-            <br><br>
-
-            <button onclick="addToCart()">
-                Confirm
-            </button>
-
-            <button onclick="closePopup()">
-                Close
-            </button>
-
+        <a href="index.html" class="active">🏠 Home</a>
+        <a href="products.html">🛍️ Products</a>
+        <a href="gallery.html">🖼️ Gallery</a>
+        <a href="about.html">ℹ️ About Studio</a>
+        <a href="contact.html">📞 Contact & Custom</a>
+        <a href="wishlist.html">❤️ Wishlist</a>
+        <a href="checkout.html">💳 Checkout</a>
+    </nav>
+
+    <!-- Hero Banner (As Shown in Screenshot) -->
+    <section class="hero-section">
+        <span class="hero-subtitle">HANDMADE RESIN CREATIONS</span>
+        <h1>Niva Aura Resin Art</h1>
+        <p>Infusing liquid resin, natural minerals, and 24K gold accents into timeless bespoke decor for home & office.</p>
+        <div class="hero-actions">
+            <a href="#products-section" class="btn-primary">Explore Products</a>
+            <a href="contact.html" class="btn-secondary">Request Custom Piece</a>
         </div>
+    </section>
 
+    <!-- Floating Search & Category Filter Card (As Shown in Screenshot) -->
+    <div class="filter-container" id="products-section">
+        <div class="search-filter-wrapper">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Search resin clocks, coasters, basins..." onkeyup="searchProducts()">
+            </div>
+            <div class="category-pills">
+                <button class="pill-btn active" data-category="All" onclick="selectCategory('All', this)">All Items</button>
+                <button class="pill-btn" data-category="Wall Clocks" onclick="selectCategory('Wall Clocks', this)">Wall Clocks</button>
+                <button class="pill-btn" data-category="Coasters" onclick="selectCategory('Coasters', this)">Coasters</button>
+                <button class="pill-btn" data-category="Wash Basins" onclick="selectCategory('Wash Basins', this)">Wash Basins</button>
+                <button class="pill-btn" data-category="Keychains" onclick="selectCategory('Keychains', this)">Keychains</button>
+                <button class="pill-btn" data-category="Nameplates" onclick="selectCategory('Nameplates', this)">Nameplates</button>
+                <button class="pill-btn" data-category="Custom Gifts" onclick="selectCategory('Custom Gifts', this)">Custom Gifts</button>
+            </div>
+        </div>
     </div>
+
+    <!-- Featured Products Showcase Header -->
+    <div class="section-header">
+        <h2>Handcrafted Catalog</h2>
+        <p>Click any artwork to inspect high-resolution details, image gallery, and specifications</p>
+    </div>
+
+    <!-- Products Grid (Auto-synced with Admin uploads) -->
+    <div id="products" class="products-grid"></div>
+
+    <!-- Interactive Lightbox Image View Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="if(event.target === this) closeImageModal()">
+        <div class="lightbox-content">
+            <button class="modal-close-btn" onclick="closeImageModal()" title="Close (ESC)">&times;</button>
+            
+            <div class="lightbox-gallery-side">
+                <div class="lightbox-main-img-wrap">
+                    <img id="modalMainImage" src="" alt="Product View">
+                </div>
+                <div class="lightbox-thumbnails" id="modalThumbnails"></div>
+            </div>
+
+            <div class="lightbox-details-side">
+                <span id="modalBadge" class="lightbox-badge">Handcrafted</span>
+                <h2 id="modalTitle" class="lightbox-title">Product Name</h2>
+                <div id="modalPrice" class="lightbox-price">&#8377;0</div>
+                <p id="modalDesc" class="lightbox-desc">Description text</p>
+
+                <div class="lightbox-specs">
+                    <h4>Artisan Craft Specifications</h4>
+                    <ul id="modalSpecsList"></ul>
+                </div>
+
+                <div class="lightbox-qty-row">
+                    <span style="font-weight: 700; color: var(--text-primary);">Quantity:</span>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                        <input type="number" id="modalQtyInput" class="qty-input" value="1" min="1" readonly>
+                        <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="lightbox-actions">
+                    <button class="btn-modal-cart" onclick="addModalProductToCart()">
+                        🛒 Add To Cart
+                    </button>
+                    <button class="btn-modal-buy" onclick="buyModalProductNow()">
+                        ⚡ Buy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Reviews Section -->
+    <section class="reviews-section">
+        <div class="section-header" style="margin-top:0;">
+            <h2>Verified Collector Reviews</h2>
+            <p>What our clients say about Niva Aura resin craftsmanship</p>
+        </div>
+        <div id="reviews" class="reviews-grid"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Niva Aura Resin Art</h3>
+                <p>Creating luxury epoxy resin decor, custom clocks, vanity basins, botanical coasters, and bespoke anniversary gifts in Ahmedabad, India.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products Catalog</a></li>
+                    <li><a href="gallery.html">Art Gallery</a></li>
+                    <li><a href="checkout.html">Cart & Checkout</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Categories</h3>
+                <ul class="footer-links">
+                    <li><a href="#products-section">Ocean Wave Clocks</a></li>
+                    <li><a href="#products-section">Floral Coasters</a></li>
+                    <li><a href="#products-section">Resin Wash Basins</a></li>
+                    <li><a href="#products-section">Personalised Keychains</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>📧 Email: nivaaura@gmail.com</p>
+                <p>📞 Phone: +91 98765 43210</p>
+                <p>📍 Ahmedabad, Gujarat, India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
-
-<script>
-
-const email =
-localStorage.getItem("email");
-
-if(email){
-
-    const firstLetter =
-    email.charAt(0).toUpperCase();
-
-    document.getElementById("userProfile").innerHTML = `
-        <div class="profile-circle"
-        onclick="window.location.href='account.html'">
-            ${firstLetter}
-        </div>
-    `;
-}
-
-</script>
-    
-<footer class="footer">
-
-    <div class="footer-content">
-
-        <h2>Niva Aura Resin Art</h2>
-
-        <p>
-            Handmade Resin Art Products | Keychains | Clocks |
-            Wash Basins | Home Decor
-        </p>
-
-        <p>
-            📧 Email: nivaaura@gmail.com
-        </p>
-
-        <p>
-            📞 Phone: +91 9876543210
-        </p>
-
-        <p>
-            📍 Ahmedabad, Gujarat, India
-        </p>
-
-        <hr>
-
-        <p>
-            © 2026 Niva Aura Resin Art. All Rights Reserved.
-        </p>
-
-    </div>
-
-</footer>
 </body>
 
 </html>

@@ -1,196 +1,157 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* Luxury Auth Styling for Niva Aura Resin Art */
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
+:root {
+    --primary-gold: #D4AF37;
+    --primary-gold-hover: #B59021;
+    --deep-teal: #0A3C4A;
+    --dark-bg: #0F171E;
 }
 
-body{
-
-height:100vh;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-background:#f5f5f5;
-
+body.auth-page, body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0F171E 0%, #0A3C4A 100%);
+    font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+    padding: 20px;
+    color: #2C3E50;
 }
 
-.signup-container{
-
-width:430px;
-
-background:#fff;
-
-padding:45px;
-
-border-radius:18px;
-
-box-shadow:0 15px 40px rgba(0,0,0,.12);
-
-text-align:center;
-
+.signup-container, .login-box {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    text-align: center;
 }
 
-.signup-logo{
-
-width:70px;
-margin-bottom:15px;
-
+.signup-logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-gold);
+    margin-bottom: 16px;
+    object-fit: cover;
 }
 
-.signup-container h1{
-
-font-size:36px;
-margin-bottom:5px;
-
+.signup-container h1, .login-box h1 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--deep-teal);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
 }
 
-.subtitle{
-
-color:#777;
-margin-bottom:30px;
-
+.subtitle, .login-box h2, .signup-container h2 {
+    font-size: 13px;
+    color: #7F8C8D;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
 }
 
-.name-row{
-
-display:flex;
-gap:15px;
-
+.name-row {
+    display: flex;
+    gap: 12px;
 }
 
-.name-row input{
-
-width:50%;
-
+.name-row input {
+    width: 50%;
 }
 
-.signup-container input{
-
-width:100%;
-
-padding:14px;
-
-margin-top:18px;
-
-border:1px solid #ddd;
-
-border-radius:10px;
-
-font-size:15px;
-
-transition:.3s;
-
+.signup-container input, .login-box input[type="email"], .login-box input[type="password"], .login-box input[type="text"] {
+    width: 100%;
+    padding: 13px 16px;
+    margin-top: 12px;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 12px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.25s ease;
+    background: #F8FAFC;
 }
 
-.signup-container input:focus{
-
-outline:none;
-
-border-color:#000;
-
+.signup-container input:focus, .login-box input:focus {
+    border-color: var(--primary-gold);
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
 }
 
-#passwordMessage{
-
-display:block;
-
-margin-top:10px;
-
-text-align:left;
-
-font-size:13px;
-
+.otp-btn {
+    width: 100%;
+    padding: 13px;
+    margin-top: 16px;
+    background: #1E293B;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
 }
 
-.otp-btn{
-
-width:100%;
-
-padding:14px;
-
-margin-top:20px;
-
-background:#444;
-
-color:white;
-
-border:none;
-
-border-radius:10px;
-
-font-size:16px;
-
-cursor:pointer;
-
-transition:.3s;
-
+.otp-btn:hover {
+    background: var(--deep-teal);
 }
 
-.signup-btn{
-
-width:100%;
-
-padding:15px;
-
-margin-top:18px;
-
-background:#111;
-
-color:white;
-
-border:none;
-
-border-radius:10px;
-
-font-size:17px;
-
-font-weight:600;
-
-cursor:pointer;
-
-transition:.3s;
-
+.signup-btn, .login-box button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 18px;
+    background: linear-gradient(135deg, var(--deep-teal) 0%, #155B70 100%);
+    color: var(--primary-gold);
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 20px rgba(10, 60, 74, 0.3);
 }
 
-.signup-btn:hover{
-
-background:#000;
-
+.signup-btn:hover, .login-box button:hover {
+    background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-gold-hover) 100%);
+    color: #111;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
 }
 
-.otp-btn:hover{
-
-background:#222;
-
+.signup-btn:disabled {
+    background: #CBD5E1;
+    color: #94A3B8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
-.login-text{
-
-margin-top:25px;
-
-font-size:15px;
-
+.login-text {
+    margin-top: 24px;
+    font-size: 14px;
+    color: #64748B;
 }
 
-.login-text a{
-
-text-decoration:none;
-
-color:#ff4d6d;
-
-font-weight:600;
-
-}
-.name-row{
-    display:flex;
-    gap:15px;
+.login-text a, .login-box a {
+    color: var(--deep-teal);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.name-row input{
-    width:50%;
+.login-text a:hover, .login-box a:hover {
+    color: var(--primary-gold);
+}
+
+#passwordMessage {
+    display: block;
+    margin-top: 6px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
 }

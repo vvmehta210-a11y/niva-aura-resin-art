@@ -1,59 +1,157 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>About Us - Niva Aura Resin Art</title>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Niva Aura Resin Art Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, rgba(10, 60, 74, 0.9), rgba(15, 23, 30, 0.92)), url('images/resin-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 80px 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .about-card {
+            max-width: 960px;
+            margin: -40px auto 60px;
+            background: white;
+            padding: 48px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            z-index: 10;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .value-box {
+            background: #F8FAFC;
+            padding: 24px;
+            border-radius: var(--radius-md);
+            border-top: 4px solid var(--primary-gold);
+        }
+
+        .value-box h3 {
+            color: var(--deep-teal);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
+    <!-- Header Navigation -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Niva Aura Logo">
+            <div class="logo-text">
+                <h2>Niva Aura</h2>
+                <span>Resin Studio</span>
+            </div>
+        </a>
 
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="products.html">Products</a>
-    <a href="contact.html">Contact</a>
+        <div class="header-right">
+            <div id="userProfile"></div>
+            <div class="cart-btn-wrapper">
+                <button class="cart-icon-btn" onclick="goToCart()">
+                    🛒 <span>Cart</span>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-</nav>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="products.html">🛍️ Products</a>
+        <a href="gallery.html">🖼️ Gallery</a>
+        <a href="about.html" class="active">ℹ️ About Studio</a>
+        <a href="contact.html">📞 Contact & Custom</a>
+        <a href="wishlist.html">❤️ Wishlist</a>
+        <a href="checkout.html">💳 Checkout</a>
+    </nav>
 
-<div class="about-container">
+    <!-- About Hero -->
+    <div class="about-hero">
+        <h1 style="font-size: 46px; font-weight: 800; color: white;">Crafting Fluid Artistry into Eternal Memories</h1>
+        <p style="color: var(--primary-gold); font-size: 16px; margin-top: 10px; font-weight: 600; letter-spacing: 2px;">HANDMADE IN AHMEDABAD, GUJARAT</p>
+    </div>
 
-    <h1>About Niva Aura Resin Art</h1>
+    <!-- About Card -->
+    <div class="about-card">
+        <h2 style="font-size: 32px; font-weight: 800; color: var(--deep-teal); margin-bottom: 20px; text-align: center;">Welcome to Niva Aura</h2>
+        
+        <p style="font-size: 16px; color: #4A5568; line-height: 1.8; margin-bottom: 16px;">
+            At <strong>Niva Aura Resin Art Studio</strong>, we specialize in transforming high-potency liquid epoxy resin, real minerals, 24K gold foil, and preserved botanicals into breathtaking bespoke art pieces. Each creation is poured, cured, polished, and finished by hand with precision.
+        </p>
 
-    <p>
-        Welcome to Niva Aura Resin Art.
-        We create unique handmade resin art products
-        including keychains, wall clocks, wash basins,
-        photo frames, coasters and custom gifts.
-    </p>
+        <p style="font-size: 16px; color: #4A5568; line-height: 1.8; margin-bottom: 24px;">
+            Whether it is an ocean-wave wall clock echoing the rhythm of sea tides, a crystal-clear coaster set enclosing hand-pressed lotus blooms, or an executive desk nameplate cast in deep sapphire resin, our passion lies in crafting timeless elegance for your living spaces and corporate environments.
+        </p>
 
-    <br>
+        <div class="values-grid">
+            <div class="value-box">
+                <h3>💎 Premium Materials</h3>
+                <p style="font-size: 14px; color: #7F8C8D;">We use non-yellowing, food-safe, UV-resistant epoxy resin engineered for durability and glass-like mirror clarity.</p>
+            </div>
+            <div class="value-box">
+                <h3>🎨 100% Handcrafted</h3>
+                <p style="font-size: 14px; color: #7F8C8D;">Every piece is unique and one-of-a-kind. No two resin pours are ever identical, guaranteeing exclusive art for your home.</p>
+            </div>
+            <div class="value-box">
+                <h3>✨ Custom Orders</h3>
+                <p style="font-size: 14px; color: #7F8C8D;">From custom color palettes and personalized initial keychains to vanity wash basins, we bring your vision to life.</p>
+            </div>
+        </div>
+    </div>
 
-    <p>
-        Our mission is to transform creativity into
-        beautiful resin artwork that adds elegance
-        to homes and workplaces.
-    </p>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Niva Aura Resin Art</h3>
+                <p>Creating luxury epoxy resin decor, custom clocks, vanity basins, botanical coasters, and bespoke anniversary gifts.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products Catalog</a></li>
+                    <li><a href="gallery.html">Art Gallery</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <p>📧 nivaaura@gmail.com</p>
+                <p>📞 +91 98765 43210</p>
+            </div>
+            <div class="footer-col">
+                <h3>Location</h3>
+                <p>📍 Ahmedabad, Gujarat, India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
 
-    <br>
-
-    <p>
-        Every product is carefully handcrafted with
-        premium quality materials and attention to detail.
-    </p>
-
-</div>
-
-<footer>
-
-    <h2>Niva Aura Resin Art</h2>
-
-    <p>Handmade Resin Art Products</p>
-
-    <p>© 2026 All Rights Reserved</p>
-
-</footer>
-
+    <script src="script.js"></script>
 </body>
+
 </html>

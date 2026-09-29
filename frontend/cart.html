@@ -1,146 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Shopping Cart</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Niva Aura Resin Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
     <style>
-        body{
-            font-family:Arial,sans-serif;
-            margin:20px;
+        .cart-wrapper {
+            max-width: 1000px;
+            margin: 50px auto 80px;
+            padding: 0 24px;
         }
 
-        h1{
-            text-align:center;
+        .cart-card-item {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border: 1px solid #E2E8F0;
         }
 
-        .item{
-            border:1px solid #ddd;
-            padding:15px;
-            margin-bottom:15px;
-            border-radius:10px;
+        .cart-item-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
         }
 
-        button{
-            padding:10px;
-            cursor:pointer;
-            margin-top:10px;
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
         }
 
-        .checkout-btn{
-            background:black;
-            color:white;
-            border:none;
-            width:100%;
-            padding:15px;
-            font-size:18px;
+        .cart-item-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--deep-teal);
+        }
+
+        .cart-item-price {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .btn-remove-item {
+            background: #FEE2E2;
+            color: #991B1B;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .btn-remove-item:hover {
+            background: #DC2626;
+            color: white;
+        }
+
+        .cart-summary-box {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            margin-top: 30px;
+            border: 1px solid #E2E8F0;
         }
     </style>
-
 </head>
+
 <body>
 
-<h1>🛒 Shopping Cart</h1>
+    <!-- Header Navigation -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Niva Aura Logo">
+            <div class="logo-text">
+                <h2>Niva Aura</h2>
+                <span>Resin Studio</span>
+            </div>
+        </a>
 
-<div id="cartItems"></div>
-
-<h2 id="grandTotal"></h2>
-
-<button class="checkout-btn"
-onclick="goCheckout()">
-Proceed To Checkout
-</button>
-
-<script>
-
-let cart =
-JSON.parse(
-localStorage.getItem("cart")
-) || [];
-
-let cartContainer =
-document.getElementById("cartItems");
-
-let total = 0;
-
-function loadCart(){
-
-    cartContainer.innerHTML="";
-
-    total=0;
-
-    cart.forEach((item,index)=>{
-
-        let itemTotal =
-        item.price * item.quantity;
-
-        total += itemTotal;
-
-        cartContainer.innerHTML += `
-
-        <div class="item">
-
-            <h3>${item.product}</h3>
-
-            <p>
-            Price: ₹${item.price}
-            </p>
-
-            <p>
-            Quantity: ${item.quantity}
-            </p>
-
-            <p>
-            Total: ₹${itemTotal}
-            </p>
-
-            <button
-            onclick="removeItem(${index})">
-
-            Remove
-
-            </button>
-
+        <div class="header-right">
+            <div id="userProfile"></div>
+            <div class="cart-btn-wrapper">
+                <button class="cart-icon-btn" onclick="goToCart()">
+                    🛒 <span>Cart</span>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </button>
+            </div>
         </div>
+    </header>
 
-        `;
-    });
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="products.html">🛍️ Products</a>
+        <a href="gallery.html">🖼️ Gallery</a>
+        <a href="about.html">ℹ️ About Studio</a>
+        <a href="contact.html">📞 Contact & Custom</a>
+        <a href="wishlist.html">❤️ Wishlist</a>
+        <a href="checkout.html">💳 Checkout</a>
+    </nav>
 
-    document
-    .getElementById("grandTotal")
-    .innerHTML =
-    "Grand Total: ₹" + total;
-}
+    <!-- Cart Container -->
+    <div class="cart-wrapper">
+        <h1 style="font-size: 36px; font-weight: 800; color: var(--deep-teal); margin-bottom: 24px; text-align: center;">🛒 Your Resin Art Cart</h1>
 
-function removeItem(index){
+        <div id="cartItems"></div>
 
-    cart.splice(index,1);
+        <div class="cart-summary-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <span style="font-size: 20px; font-weight: 800; color: var(--deep-teal);">Subtotal Grand Total:</span>
+                <span id="grandTotal" style="font-size: 26px; font-weight: 800; color: var(--deep-teal);">&#8377;0</span>
+            </div>
+            <button class="btn-primary" style="width:100%; text-align:center;" onclick="goCheckout()">
+                Proceed To Secure Checkout 💳
+            </button>
+        </div>
+    </div>
 
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Niva Aura Resin Art</h3>
+                <p>Creating luxury epoxy resin decor, custom clocks, vanity basins, botanical coasters, and bespoke anniversary gifts.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="checkout.html">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Contact</h3>
+                <p>📧 nivaaura@gmail.com</p>
+                <p>📞 +91 98765 43210</p>
+            </div>
+            <div class="footer-col">
+                <h3>Location</h3>
+                <p>📍 Ahmedabad, Gujarat, India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
 
-    loadCart();
-}
+    <script src="script.js"></script>
+    <script>
+        function renderCartPage() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let container = document.getElementById("cartItems");
+            let total = 0;
 
-function goCheckout(){
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding: 60px; background:white; border-radius:16px; box-shadow:var(--shadow-soft);">
+                        <h3 style="font-size:22px; color:var(--deep-teal); margin-bottom:8px;">Your shopping cart is empty</h3>
+                        <p style="color:var(--text-muted); margin-bottom:20px;">Explore our resin art catalog and add your favorite creations!</p>
+                        <a href="products.html" class="btn-primary">Browse Resin Products</a>
+                    </div>
+                `;
+                document.getElementById("grandTotal").innerHTML = "&#8377;0";
+                return;
+            }
 
-    if(cart.length===0){
+            let html = "";
+            cart.forEach((item, index) => {
+                let itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                let img = item.image || "images/resin_wall_clock.png";
 
-        alert(
-        "Cart is Empty"
-        );
+                html += `
+                    <div class="cart-card-item">
+                        <div class="cart-item-left">
+                            <img src="${img}" class="cart-item-img" alt="${item.product}">
+                            <div>
+                                <div class="cart-item-title">${item.product}</div>
+                                <div class="cart-item-price">&#8377;${item.price.toLocaleString('en-IN')} × ${item.quantity}</div>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:20px;">
+                            <div style="font-size: 18px; font-weight:800; color:var(--deep-teal);">&#8377;${itemTotal.toLocaleString('en-IN')}</div>
+                            <button class="btn-remove-item" onclick="removeItem(${index})">Remove 🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
 
-        return;
-    }
+            container.innerHTML = html;
+            document.getElementById("grandTotal").innerHTML = "&#8377;" + total.toLocaleString('en-IN');
+        }
 
-    window.location.href =
-    "checkout.html";
-}
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCartPage();
+            updateCartCount();
+        }
 
-loadCart();
+        function goCheckout() {
+            let cart = JSON.parse(localStorage.getItem("cart")) || [];
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            window.location.href = "checkout.html";
+        }
 
-</script>
-
+        document.addEventListener("DOMContentLoaded", renderCartPage);
+    </script>
 </body>
+
 </html>

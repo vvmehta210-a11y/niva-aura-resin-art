@@ -1,169 +1,1065 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Payment - Niva Aura Resin Art</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment – Niva Aura Resin Art</title>
+    <meta name="description" content="Secure payment for Niva Aura Resin Art. Pay via UPI, Card, Net Banking or Cash on Delivery.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body{
-            font-family:Arial,sans-serif;
-            background:#f5f5f5;
+        :root {
+            --gold:    #D4AF37;
+            --gold-lt: #FFFBEB;
+            --teal:    #0A3C4A;
+            --teal-dk: #062630;
+            --rose:    #E84A5F;
+            --green:   #15803D;
+            --bg:      #F6F8FA;
+            --white:   #FFFFFF;
+            --border:  #E2E8F0;
+            --muted:   #6B7280;
+            --shadow:  0 4px 24px rgba(0,0,0,.08);
+            --radius:  16px;
+            --ease:    0.25s ease;
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:'Plus Jakarta Sans', sans-serif;
+            background:var(--bg);
+            color:#1A202C;
+            min-height:100vh;
+            padding-bottom:120px;
         }
 
-        .container{
-            width:500px;
-            margin:50px auto;
+        /* ──── TOPBAR ──── */
+        .py-topbar {
+            background:var(--white);
+            padding:14px 28px;
+            display:flex; align-items:center;
+            justify-content:space-between;
+            box-shadow:0 2px 12px rgba(0,0,0,.06);
+            position:sticky; top:0; z-index:100;
+        }
+        .py-brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
+        .py-brand img {
+            width:42px; height:42px; border-radius:50%;
+            object-fit:cover; border:2px solid var(--gold);
+        }
+        .py-brand-text h2 { font-size:18px; font-weight:800; color:var(--teal); line-height:1; }
+        .py-brand-text span { font-size:9px; letter-spacing:2px; color:var(--gold); font-weight:700; text-transform:uppercase; }
+        .py-secure { display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--green); background:#DCFCE7; padding:6px 14px; border-radius:20px; }
+
+        /* ──── STEPS ──── */
+        .py-steps {
+            background:var(--white); border-bottom:1px solid var(--border);
+            padding:14px 28px; display:flex; align-items:center; justify-content:center;
+        }
+        .py-step { display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; }
+        .py-step-num {
+            width:28px; height:28px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            font-size:12px; font-weight:800;
+            background:#E2E8F0; color:var(--muted); transition:var(--ease);
+        }
+        .py-step.done .py-step-num { background:var(--green); color:white; }
+        .py-step.active .py-step-num { background:var(--teal); color:white; }
+        .py-step-label { color:var(--muted); }
+        .py-step.done .py-step-label { color:var(--green); font-weight:700; }
+        .py-step.active .py-step-label { color:var(--teal); font-weight:700; }
+        .py-step-line { width:48px; height:2px; background:#E2E8F0; margin:0 8px; }
+        .py-step-line.done { background:var(--green); }
+        @media(max-width:480px){ .py-step-line { width:20px; margin:0 4px; } .py-step-label { display:none; } }
+
+        /* ──── LAYOUT ──── */
+        .py-page {
+            max-width:1100px; margin:28px auto;
+            padding:0 20px;
+            display:grid; grid-template-columns:1fr 360px; gap:28px;
+        }
+        @media(max-width:840px){ .py-page { grid-template-columns:1fr; } }
+
+        /* ──── CARD ──── */
+        .py-card {
+            background:var(--white); border-radius:var(--radius);
+            box-shadow:var(--shadow); padding:26px;
+            border:1px solid var(--border); margin-bottom:20px;
+        }
+        .py-card-title {
+            font-size:17px; font-weight:800; color:var(--teal);
+            margin-bottom:18px; display:flex; align-items:center; gap:10px;
+        }
+
+        /* ──── SECTION LABEL ──── */
+        .py-sec-label {
+            font-size:11px; font-weight:700; color:var(--gold);
+            letter-spacing:1.5px; text-transform:uppercase;
+            margin:16px 0 12px; display:flex; align-items:center; gap:10px;
+        }
+        .py-sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+        /* ──── ADDRESS PREVIEW ──── */
+        .py-addr-box {
+            background:#F8FAFC; border-radius:12px;
+            padding:14px 18px; font-size:13px; color:#374151; line-height:1.9;
+            border:1px solid var(--border);
+        }
+        .py-addr-box strong { font-size:14px; color:var(--teal); }
+        .py-addr-change { font-size:12px; color:var(--rose); text-decoration:none; margin-left:8px; font-weight:700; }
+
+        /* ──── COUPONS ──── */
+        .py-coupon-section {}
+        .py-available-coupons { display:grid; gap:10px; margin-bottom:16px; }
+        .py-coupon-chip {
+            display:flex; align-items:center; justify-content:space-between;
+            background:#FAFBFC; border:1.5px dashed var(--border);
+            border-radius:12px; padding:12px 16px; cursor:pointer;
+            transition:var(--ease);
+        }
+        .py-coupon-chip:hover { border-color:var(--gold); background:var(--gold-lt); }
+        .py-coupon-chip.applied { border-color:var(--green); background:#F0FDF4; border-style:solid; }
+        .py-coupon-code { font-size:14px; font-weight:800; color:var(--teal); letter-spacing:1px; }
+        .py-coupon-label { font-size:11px; color:var(--muted); margin-top:2px; }
+        .py-coupon-btn {
+            font-size:12px; font-weight:700;
+            padding:6px 14px; border-radius:20px; border:none; cursor:pointer;
+            background:var(--teal); color:white; transition:var(--ease);
+            white-space:nowrap;
+        }
+        .py-coupon-btn:hover { background:var(--teal-dk); }
+        .py-coupon-btn.remove { background:#FEE2E2; color:#991B1B; }
+        .py-coupon-input-row {
+            display:flex; gap:10px; align-items:center;
+        }
+        .py-coupon-input {
+            flex:1; padding:11px 16px;
+            border:1.5px solid var(--border); border-radius:10px;
+            font-size:14px; font-family:'Plus Jakarta Sans', sans-serif;
+            outline:none; transition:var(--ease); text-transform:uppercase;
+        }
+        .py-coupon-input:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(10,60,74,.12); }
+        .py-coupon-apply-btn {
+            padding:11px 20px;
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            color:white; border:none; border-radius:10px;
+            font-size:14px; font-weight:700;
+            font-family:'Plus Jakarta Sans', sans-serif;
+            cursor:pointer; transition:var(--ease); white-space:nowrap;
+        }
+        .py-coupon-apply-btn:hover { transform:translateY(-1px); }
+        .py-coupon-msg { font-size:12px; margin-top:8px; padding:8px 14px; border-radius:8px; }
+        .py-coupon-msg.success { background:#F0FDF4; color:var(--green); font-weight:700; }
+        .py-coupon-msg.error   { background:#FEF2F2; color:#DC2626; font-weight:600; }
+        .py-view-all-coupons {
+            font-size:12px; color:var(--teal); font-weight:700;
+            text-decoration:none; display:block; text-align:center;
+            margin-top:12px; cursor:pointer;
+        }
+
+        /* ──── PAYMENT ACCORDION ──── */
+        .py-methods { display:flex; flex-direction:column; gap:12px; }
+        .py-method-item {
+            border:2px solid var(--border); border-radius:14px;
+            overflow:hidden; transition:border-color var(--ease);
             background:white;
-            padding:20px;
-            border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,.2);
+        }
+        .py-method-item.selected { border-color:var(--teal); }
+        .py-method-header {
+            display:flex; align-items:center; gap:14px;
+            padding:16px 18px; cursor:pointer;
+            user-select:none;
+        }
+        .py-method-icon { font-size:26px; flex-shrink:0; }
+        .py-method-info { flex:1; }
+        .py-method-title { font-size:14px; font-weight:700; color:#1A202C; }
+        .py-method-sub   { font-size:11px; color:var(--muted); margin-top:2px; }
+        .py-method-radio {
+            width:20px; height:20px; border-radius:50%;
+            border:2px solid var(--border);
+            display:flex; align-items:center; justify-content:center;
+            flex-shrink:0; transition:var(--ease);
+        }
+        .py-method-item.selected .py-method-radio {
+            border-color:var(--teal); background:var(--teal);
+        }
+        .py-method-item.selected .py-method-radio::after {
+            content:''; width:8px; height:8px;
+            background:white; border-radius:50%;
+        }
+        .py-method-body {
+            max-height:0; overflow:hidden;
+            transition:max-height 0.35s ease, padding 0.2s ease;
+            padding:0 18px;
+        }
+        .py-method-body.open { max-height:600px; padding:0 18px 18px; }
+
+        /* ──── UPI ──── */
+        .py-upi-box { background:#F8F9FF; border-radius:12px; padding:20px; text-align:center; }
+        .py-upi-id-input-row { display:flex; gap:10px; margin-top:14px; }
+        .py-upi-id-input {
+            flex:1; padding:12px 16px;
+            border:1.5px solid var(--border); border-radius:10px;
+            font-size:14px; font-family:'Plus Jakarta Sans', sans-serif; outline:none;
+            transition:var(--ease);
+        }
+        .py-upi-id-input:focus { border-color:var(--teal); }
+        .py-verify-btn {
+            padding:12px 18px; background:var(--teal);
+            color:white; border:none; border-radius:10px;
+            font-size:13px; font-weight:700;
+            font-family:'Plus Jakarta Sans', sans-serif; cursor:pointer;
+        }
+        .py-upi-apps { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin:16px 0 8px; }
+        .py-upi-app {
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            font-size:11px; color:var(--muted); cursor:pointer;
+            padding:8px 14px; border-radius:10px; border:1px solid var(--border);
+            transition:var(--ease);
+        }
+        .py-upi-app:hover { border-color:var(--teal); background:var(--gold-lt); }
+        .py-upi-app-icon { font-size:26px; }
+        .py-secure-note { font-size:11px; color:var(--muted); margin-top:10px; display:flex; align-items:center; justify-content:center; gap:5px; }
+
+        /* ──── CARD PAYMENT ──── */
+        .py-card-form {}
+        .py-form-group { margin-bottom:14px; }
+        .py-form-group label { display:block; font-size:12px; font-weight:700; color:#374151; margin-bottom:6px; }
+        .py-form-group input {
+            width:100%; padding:12px 16px;
+            border:1.5px solid var(--border); border-radius:10px;
+            font-size:14px; font-family:'Plus Jakarta Sans', sans-serif;
+            outline:none; transition:var(--ease); background:#FAFBFC;
+        }
+        .py-form-group input:focus { border-color:var(--teal); background:white; box-shadow:0 0 0 3px rgba(10,60,74,.12); }
+        .py-form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+        .py-card-secure { font-size:11px; color:var(--muted); margin-top:10px; display:flex; align-items:center; gap:5px; }
+
+        /* ──── NET BANKING ──── */
+        .py-nb-banks { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-top:4px; }
+        .py-nb-bank {
+            border:1.5px solid var(--border); border-radius:10px; padding:10px;
+            cursor:pointer; text-align:center; transition:var(--ease);
+            font-size:12px; font-weight:600; color:#374151;
+        }
+        .py-nb-bank:hover { border-color:var(--teal); background:#F0FAFA; }
+        .py-nb-bank.active { border-color:var(--teal); background:#E6F4F7; color:var(--teal); }
+        .py-nb-bank-icon { font-size:20px; margin-bottom:4px; }
+
+        /* ──── COD ──── */
+        .py-cod-box {
+            background:#F0FDF4; border:1.5px solid #A7F3D0;
+            border-radius:12px; padding:16px 20px;
+            display:flex; align-items:center; gap:14px;
+        }
+        .py-cod-icon { font-size:32px; }
+        .py-cod-text h4 { font-size:14px; font-weight:700; color:var(--green); }
+        .py-cod-text p  { font-size:12px; color:#374151; margin-top:4px; }
+        .py-cod-charge { display:inline-block; background:#FEF3C7; color:#92400E; font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; margin-top:6px; }
+
+        /* ──── WALLETS ──── */
+        .py-wallets { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:4px; }
+        .py-wallet {
+            border:1.5px solid var(--border); border-radius:10px; padding:10px;
+            cursor:pointer; text-align:center; transition:var(--ease);
+            font-size:12px; font-weight:600; color:#374151;
+        }
+        .py-wallet:hover { border-color:var(--teal); background:#F0FAFA; }
+        .py-wallet.active { border-color:var(--teal); background:#E6F4F7; color:var(--teal); }
+        .py-wallet-icon { font-size:22px; margin-bottom:4px; }
+
+        /* ──── PLACE ORDER BUTTON ──── */
+        .py-place-btn {
+            width:100%; padding:17px;
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            color:white; border:none; border-radius:12px;
+            font-size:16px; font-weight:800;
+            font-family:'Plus Jakarta Sans', sans-serif;
+            cursor:pointer; margin-top:20px; letter-spacing:.3px;
+            transition:var(--ease);
+            display:flex; align-items:center; justify-content:center; gap:10px;
+            box-shadow:0 4px 16px rgba(10,60,74,.3);
+        }
+        .py-place-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(10,60,74,.4); }
+        .py-place-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+        /* ──── SPINNER ──── */
+        .spinner {
+            display:inline-block; width:18px; height:18px;
+            border:3px solid rgba(255,255,255,.4); border-top-color:white;
+            border-radius:50%; animation:spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        /* ──── RIGHT SUMMARY ──── */
+        .py-summary { position:sticky; top:120px; }
+        .py-sum-card { background:white; border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; border:1px solid var(--border); }
+        .py-sum-title { font-size:16px; font-weight:800; color:var(--teal); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+        .py-sum-items { max-height:220px; overflow-y:auto; }
+        .py-s-item { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid #F1F5F9; }
+        .py-s-item:last-child { border-bottom:none; }
+        .py-s-img { width:52px; height:52px; border-radius:8px; object-fit:cover; background:#F1F5F9; flex-shrink:0; }
+        .py-s-info { flex:1; }
+        .py-s-name { font-size:12px; font-weight:700; color:#1A202C; line-height:1.3; }
+        .py-s-qty  { font-size:11px; color:var(--muted); margin-top:2px; }
+        .py-s-price{ font-size:13px; font-weight:800; color:var(--teal); white-space:nowrap; }
+        .py-s-divider { border:none; border-top:1px solid #F1F5F9; margin:12px 0; }
+        .py-s-row { display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:7px; }
+        .py-s-row.total { font-size:16px; font-weight:800; color:var(--teal); border-top:2px solid var(--border); padding-top:10px; margin-top:4px; }
+        .py-s-row .green { color:var(--green); font-weight:700; }
+        .py-s-row .discount { color:var(--rose); font-weight:700; }
+        .py-trust { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+        .py-badge { display:flex; align-items:center; gap:5px; font-size:11px; color:#374151; background:#F8FAFC; border:1px solid var(--border); border-radius:20px; padding:5px 12px; }
+        .py-back-link { display:inline-flex; align-items:center; gap:6px; font-size:13px; color:var(--muted); text-decoration:none; margin-top:14px; transition:var(--ease); }
+        .py-back-link:hover { color:var(--teal); }
+
+        /* ──── MOBILE STICKY BOTTOM ──── */
+        .py-sticky-bar {
+            position:fixed; bottom:0; left:0; right:0;
+            background:white; padding:14px 20px;
+            box-shadow:0 -4px 20px rgba(0,0,0,.12);
+            z-index:200;
+            display:flex; align-items:center; gap:16px;
+        }
+        .py-sticky-amount {
+            flex:1;
+        }
+        .py-sticky-amount p { font-size:11px; color:var(--muted); }
+        .py-sticky-amount span { font-size:20px; font-weight:800; color:var(--teal); }
+        .py-sticky-btn {
+            padding:14px 28px;
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            color:white; border:none; border-radius:12px;
+            font-size:15px; font-weight:800;
+            font-family:'Plus Jakarta Sans', sans-serif; cursor:pointer;
+            white-space:nowrap; transition:var(--ease);
+            box-shadow:0 4px 16px rgba(10,60,74,.3);
+        }
+        .py-sticky-btn:hover { transform:translateY(-1px); }
+        .py-sticky-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+        @media(max-width:400px){
+            .py-sticky-btn { padding:14px 18px; font-size:14px; }
         }
 
-        h1{
-            text-align:center;
-        }
-
-        .payment-option{
-            border:1px solid #ddd;
-            padding:15px;
-            margin:10px 0;
-            cursor:pointer;
-        }
-
-        .payment-option:hover{
-            background:#f0f0f0;
-        }
-
-        button{
-            width:100%;
-            padding:12px;
-            background:black;
-            color:white;
-            border:none;
-            cursor:pointer;
-            margin-top:20px;
-        }
+        /* ──── UPI INPUT HELPER ──── */
+        .py-upi-status { font-size:12px; margin-top:8px; font-weight:600; }
+        .py-upi-status.ok  { color:var(--green); }
+        .py-upi-status.err { color:#DC2626; }
     </style>
-
 </head>
 <body>
 
-<div class="container">
+<!-- TOPBAR -->
+<header class="py-topbar">
+    <a href="index.html" class="py-brand">
+        <img src="images/logo.png" alt="Niva Aura Logo">
+        <div class="py-brand-text">
+            <h2>Niva Aura</h2>
+            <span>Resin Studio</span>
+        </div>
+    </a>
+    <div class="py-secure">🔒 100% Secure</div>
+</header>
 
-    <h1>Select Payment Method</h1>
-
-    <div class="payment-option" onclick="selectPayment('UPI')">
-        UPI (Google Pay / PhonePe / Paytm)
+<!-- STEPS -->
+<div class="py-steps">
+    <div class="py-step done">
+        <div class="py-step-num">✓</div>
+        <span class="py-step-label">Address</span>
     </div>
-
-    <div class="payment-option" onclick="selectPayment('Card')">
-        Debit / Credit Card
+    <div class="py-step-line done"></div>
+    <div class="py-step done">
+        <div class="py-step-num">✓</div>
+        <span class="py-step-label">Order Summary</span>
     </div>
-
-    <div class="payment-option" onclick="selectPayment('Cash On Delivery')">
-        Cash On Delivery
+    <div class="py-step-line done"></div>
+    <div class="py-step active">
+        <div class="py-step-num">3</div>
+        <span class="py-step-label">Payment</span>
     </div>
-
-    <p id="selectedMethod">
-        No Payment Method Selected
-    </p>
-
-    <div id="upiSection" style="display:none; text-align:center;">
-
-    <h3>Scan QR Code</h3>
-
-    <img
-    src="images/upi-qr.jpg"
-    width="250">
-
-    <p>
-        After payment click Confirm Payment
-    </p>
-
-    <button onclick="confirmUPIPayment()">
-        Confirm Payment
-    </button>
-
 </div>
 
-    <button onclick="processPayment()">
-        Pay Now
-    </button>
+<div class="py-page">
 
+    <!-- LEFT COLUMN -->
+    <div>
+
+        <!-- Address Preview -->
+        <div class="py-card">
+            <div class="py-card-title">📍 Delivering To</div>
+            <div class="py-addr-box" id="addrPreview">
+                Loading address…
+                <a href="checkout.html" class="py-addr-change">✏️ Change</a>
+            </div>
+        </div>
+
+        <!-- Order Items Summary -->
+        <div class="py-card">
+            <div class="py-card-title">🛍️ Order Items</div>
+            <div id="orderItemsList">
+                <p style="color:var(--muted); font-size:13px;">Loading…</p>
+            </div>
+        </div>
+
+        <!-- Offers & Coupons -->
+        <div class="py-card">
+            <div class="py-card-title">🏷️ Offers &amp; Coupons</div>
+
+            <div class="py-available-coupons" id="availableCoupons">
+                <!-- filled by JS -->
+            </div>
+
+            <div class="py-coupon-input-row">
+                <input type="text" class="py-coupon-input" id="couponInput" placeholder="Enter coupon code" maxlength="20">
+                <button class="py-coupon-apply-btn" onclick="applyCoupon()">Apply</button>
+            </div>
+            <div class="py-coupon-msg" id="couponMsg" style="display:none;"></div>
+
+            <a class="py-view-all-coupons" onclick="toggleCouponList()" id="viewAllBtn">
+                ↓ View all coupons &amp; offers
+            </a>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="py-card">
+            <div class="py-card-title">💳 Select Payment Method</div>
+
+            <div class="py-methods">
+
+                <!-- UPI -->
+                <div class="py-method-item" id="method-upi">
+                    <div class="py-method-header" onclick="selectMethod('upi')">
+                        <div class="py-method-icon">📱</div>
+                        <div class="py-method-info">
+                            <div class="py-method-title">UPI Payment</div>
+                            <div class="py-method-sub">GPay · PhonePe · Paytm · BHIM</div>
+                        </div>
+                        <div class="py-method-radio" id="radio-upi"></div>
+                    </div>
+                    <div class="py-method-body" id="body-upi">
+                        <div class="py-upi-box">
+                            <div class="py-upi-apps">
+                                <div class="py-upi-app" onclick="selectUPIApp('GPay')">
+                                    <span class="py-upi-app-icon">🟢</span>GPay
+                                </div>
+                                <div class="py-upi-app" onclick="selectUPIApp('PhonePe')">
+                                    <span class="py-upi-app-icon">🟣</span>PhonePe
+                                </div>
+                                <div class="py-upi-app" onclick="selectUPIApp('Paytm')">
+                                    <span class="py-upi-app-icon">🔵</span>Paytm
+                                </div>
+                                <div class="py-upi-app" onclick="selectUPIApp('BHIM')">
+                                    <span class="py-upi-app-icon">🏦</span>BHIM
+                                </div>
+                            </div>
+                            <div style="font-size:13px; font-weight:600; color:var(--teal); margin-bottom:8px;">— OR enter UPI ID —</div>
+                            <div class="py-upi-id-input-row">
+                                <input type="text" class="py-upi-id-input" id="upiIdInput"
+                                    placeholder="yourname@upi" autocomplete="off">
+                                <button class="py-verify-btn" onclick="verifyUPI()">Verify</button>
+                            </div>
+                            <div class="py-upi-status" id="upiStatus"></div>
+                            <div class="py-secure-note">🔒 Your UPI ID is never stored on our servers</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card -->
+                <div class="py-method-item" id="method-card">
+                    <div class="py-method-header" onclick="selectMethod('card')">
+                        <div class="py-method-icon">💳</div>
+                        <div class="py-method-info">
+                            <div class="py-method-title">Credit / Debit Card</div>
+                            <div class="py-method-sub">Visa · Mastercard · RuPay · Amex</div>
+                        </div>
+                        <div class="py-method-radio" id="radio-card"></div>
+                    </div>
+                    <div class="py-method-body" id="body-card">
+                        <div class="py-card-form">
+                            <div class="py-form-group">
+                                <label>Card Number</label>
+                                <input type="text" id="cardNo" placeholder="1234  5678  9012  3456"
+                                    maxlength="19" oninput="formatCard(this)" autocomplete="cc-number">
+                            </div>
+                            <div class="py-form-row">
+                                <div class="py-form-group">
+                                    <label>Expiry (MM/YY)</label>
+                                    <input type="text" id="expiry" placeholder="08/27" maxlength="5"
+                                        oninput="formatExpiry(this)" autocomplete="cc-exp">
+                                </div>
+                                <div class="py-form-group">
+                                    <label>CVV</label>
+                                    <input type="password" id="cvv" placeholder="•••" maxlength="4"
+                                        autocomplete="cc-csc">
+                                </div>
+                            </div>
+                            <div class="py-form-group">
+                                <label>Cardholder Name</label>
+                                <input type="text" id="cardName" placeholder="PRIYA SHARMA"
+                                    style="text-transform:uppercase;" autocomplete="cc-name">
+                            </div>
+                            <div class="py-card-secure">
+                                🔒 Card details are transmitted encrypted. We never store raw card data.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Net Banking -->
+                <div class="py-method-item" id="method-netbanking">
+                    <div class="py-method-header" onclick="selectMethod('netbanking')">
+                        <div class="py-method-icon">🏦</div>
+                        <div class="py-method-info">
+                            <div class="py-method-title">Net Banking</div>
+                            <div class="py-method-sub">All major banks supported</div>
+                        </div>
+                        <div class="py-method-radio" id="radio-netbanking"></div>
+                    </div>
+                    <div class="py-method-body" id="body-netbanking">
+                        <div class="py-nb-banks">
+                            <div class="py-nb-bank" onclick="selectBank(this, 'SBI')">
+                                <div class="py-nb-bank-icon">🏛️</div>SBI
+                            </div>
+                            <div class="py-nb-bank" onclick="selectBank(this, 'HDFC')">
+                                <div class="py-nb-bank-icon">🏦</div>HDFC
+                            </div>
+                            <div class="py-nb-bank" onclick="selectBank(this, 'ICICI')">
+                                <div class="py-nb-bank-icon">💼</div>ICICI
+                            </div>
+                            <div class="py-nb-bank" onclick="selectBank(this, 'Axis')">
+                                <div class="py-nb-bank-icon">🏧</div>Axis
+                            </div>
+                            <div class="py-nb-bank" onclick="selectBank(this, 'Kotak')">
+                                <div class="py-nb-bank-icon">🏦</div>Kotak
+                            </div>
+                            <div class="py-nb-bank" onclick="selectBank(this, 'Other')">
+                                <div class="py-nb-bank-icon">🔗</div>Other
+                            </div>
+                        </div>
+                        <div class="py-secure-note" style="margin-top:12px;">🔒 You'll be redirected to your bank's secure page</div>
+                    </div>
+                </div>
+
+                <!-- Wallets -->
+                <div class="py-method-item" id="method-wallet">
+                    <div class="py-method-header" onclick="selectMethod('wallet')">
+                        <div class="py-method-icon">👜</div>
+                        <div class="py-method-info">
+                            <div class="py-method-title">Wallets</div>
+                            <div class="py-method-sub">Paytm · Amazon Pay · Mobikwik</div>
+                        </div>
+                        <div class="py-method-radio" id="radio-wallet"></div>
+                    </div>
+                    <div class="py-method-body" id="body-wallet">
+                        <div class="py-wallets">
+                            <div class="py-wallet" onclick="selectWallet(this, 'Paytm')">
+                                <div class="py-wallet-icon">🔵</div>Paytm
+                            </div>
+                            <div class="py-wallet" onclick="selectWallet(this, 'Amazon Pay')">
+                                <div class="py-wallet-icon">🟠</div>Amazon Pay
+                            </div>
+                            <div class="py-wallet" onclick="selectWallet(this, 'Mobikwik')">
+                                <div class="py-wallet-icon">💜</div>Mobikwik
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COD -->
+                <div class="py-method-item" id="method-cod">
+                    <div class="py-method-header" onclick="selectMethod('cod')">
+                        <div class="py-method-icon">💵</div>
+                        <div class="py-method-info">
+                            <div class="py-method-title">Cash on Delivery</div>
+                            <div class="py-method-sub">Pay when your order arrives</div>
+                        </div>
+                        <div class="py-method-radio" id="radio-cod"></div>
+                    </div>
+                    <div class="py-method-body" id="body-cod">
+                        <div class="py-cod-box">
+                            <div class="py-cod-icon">🏠</div>
+                            <div class="py-cod-text">
+                                <h4>Cash on Delivery Available</h4>
+                                <p>Pay <strong id="codAmount">₹0</strong> in cash when your order arrives at your door.</p>
+                                <span class="py-cod-charge">₹0 COD charges</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- end py-methods -->
+
+            <button class="py-place-btn" id="placeBtn" onclick="placeOrder()">
+                🔒 Place Order Securely
+            </button>
+
+            <a href="checkout.html" class="py-back-link">← Back to Address</a>
+        </div>
+
+    </div><!-- end left column -->
+
+    <!-- RIGHT: PRICE DETAILS -->
+    <div class="py-summary">
+        <div class="py-sum-card">
+            <div class="py-sum-title">🧾 Price Details</div>
+
+            <div class="py-sum-items" id="rightSummaryItems">
+                <p style="color:var(--muted); font-size:12px;">Loading…</p>
+            </div>
+
+            <hr class="py-s-divider">
+
+            <div class="py-s-row">
+                <span>Total MRP</span>
+                <span id="s-mrp">₹0</span>
+            </div>
+            <div class="py-s-row">
+                <span>Discount</span>
+                <span class="discount" id="s-discount">-₹0</span>
+            </div>
+            <div class="py-s-row">
+                <span>Delivery Fee</span>
+                <span class="green" id="s-delivery">FREE</span>
+            </div>
+            <div class="py-s-row" id="coupon-row" style="display:none;">
+                <span>Coupon Discount</span>
+                <span class="discount" id="s-coupon">-₹0</span>
+            </div>
+            <div class="py-s-row total">
+                <span>Total Amount</span>
+                <span id="s-total">₹0</span>
+            </div>
+
+            <div class="py-trust">
+                <div class="py-badge">🔒 SSL Secure</div>
+                <div class="py-badge">🚚 Free Delivery</div>
+                <div class="py-badge">✅ Easy Returns</div>
+            </div>
+        </div>
+    </div>
+
+</div><!-- end py-page -->
+
+<!-- STICKY BOTTOM BAR -->
+<div class="py-sticky-bar">
+    <div class="py-sticky-amount">
+        <p>Total Amount</p>
+        <span id="stickyTotal">₹0</span>
+    </div>
+    <button class="py-sticky-btn" id="stickyPlaceBtn" onclick="placeOrder()">
+        🔒 Place Order
+    </button>
 </div>
 
 <script>
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let activeMethod    = "";
+let selectedBank    = "";
+let selectedWallet  = "";
+let selectedUPIApp  = "";
+let couponDiscount  = 0;
+let appliedCoupon   = "";
+let cartMRP         = 0;
+let deliveryFee     = 0;
+const METHODS_ORDER = ["upi","card","netbanking","wallet","cod"];
 
-let paymentMethod="";
+/* ════════════════════════════════════════
+   ON LOAD
+════════════════════════════════════════ */
+document.addEventListener("DOMContentLoaded", () => {
+    loadAddressPreview();
+    loadCartSummary();
+    loadAvailableCoupons();
+});
 
-function selectPayment(method){
-
-    paymentMethod = method;
-
-    document.getElementById("selectedMethod").innerHTML =
-    "Selected: " + method;
-
-    if(method === "UPI"){
-        document.getElementById("upiSection").style.display = "block";
-    }else{
-        document.getElementById("upiSection").style.display = "none";
+/* ─── Address Preview ─────────────────── */
+function loadAddressPreview() {
+    const c = JSON.parse(localStorage.getItem("customer") || "{}");
+    const el = document.getElementById("addrPreview");
+    if (c.name) {
+        el.innerHTML = `
+            <strong>${c.name}</strong> &nbsp;|&nbsp; ${c.mobile}<br>
+            ${c.houseNo}, ${c.address}<br>
+            ${c.city}, ${c.state} – ${c.pincode}
+            ${c.landmark ? "<br><em>" + c.landmark + "</em>" : ""}
+            <a href="checkout.html" class="py-addr-change">✏️ Change</a>
+        `;
+    } else {
+        el.innerHTML = 'No address found. <a href="checkout.html" class="py-addr-change">Add Address</a>';
     }
 }
 
-async function confirmUPIPayment(){
+/* ─── Cart Summary ────────────────────── */
+function loadCartSummary() {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const orderList   = document.getElementById("orderItemsList");
+    const rightItems  = document.getElementById("rightSummaryItems");
 
-    alert("Payment Confirmed");
-
-    await processPayment();
-}
-
-async function processPayment(){
-
-    if(paymentMethod===""){
-        alert("Please Select Payment Method");
+    if (!cart.length) {
+        const emptyMsg = '<p style="color:var(--muted);font-size:13px;">Your cart is empty.</p>';
+        orderList.innerHTML = emptyMsg;
+        rightItems.innerHTML = emptyMsg;
         return;
     }
 
-    let email =
-    localStorage.getItem("email");
+    let mrp = 0;
+    let leftHTML  = "";
+    let rightHTML = "";
 
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/order",
+    cart.forEach(item => {
+        const tot = item.price * item.quantity;
+        mrp += tot;
+        const img = item.image || "images/resin_wall_clock.png";
+        const delivery = calculateEstimatedDelivery();
 
-    {
-        method:"POST",
+        leftHTML += `
+        <div class="py-s-item">
+            <img src="${img}" class="py-s-img" alt="${item.product}" onerror="this.src='images/resin_wall_clock.png'">
+            <div class="py-s-info">
+                <div class="py-s-name">${item.product}</div>
+                <div class="py-s-qty">Qty: ${item.quantity} &nbsp;·&nbsp; <span style="color:#15803D;font-weight:600;">Est. delivery: ${delivery}</span></div>
+            </div>
+            <div class="py-s-price">₹${tot.toLocaleString("en-IN")}</div>
+        </div>`;
 
-        headers:{
-            "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-
-            userEmail:email,
-
-            product:"Epoxy Resin Kit",
-
-            price:599,
-
-            quantity:1,
-
-            status:"Pending"
-
-        })
+        rightHTML += `
+        <div class="py-s-item">
+            <img src="${img}" class="py-s-img" alt="${item.product}" onerror="this.src='images/resin_wall_clock.png'">
+            <div class="py-s-info">
+                <div class="py-s-name">${item.product}</div>
+                <div class="py-s-qty">Qty: ${item.quantity}</div>
+            </div>
+            <div class="py-s-price">₹${tot.toLocaleString("en-IN")}</div>
+        </div>`;
     });
 
-    const data =
-    await response.json();
+    orderList.innerHTML  = leftHTML;
+    rightItems.innerHTML = rightHTML;
 
-    alert(
-        "Payment Successful\nMethod: " +
-        paymentMethod
-    );
+    cartMRP     = mrp;
+    deliveryFee = mrp >= 999 ? 0 : 99;
+    updatePriceSummary();
+}
 
-    window.location.href =
-    "success.html";
+function calculateEstimatedDelivery() {
+    const d = new Date();
+    d.setDate(d.getDate() + 5);
+    return d.toLocaleDateString("en-IN", { weekday:"short", day:"numeric", month:"short" });
+}
+
+function updatePriceSummary() {
+    const delivery  = deliveryFee;
+    const grand     = cartMRP + delivery - couponDiscount;
+
+    document.getElementById("s-mrp").textContent       = "₹" + cartMRP.toLocaleString("en-IN");
+    document.getElementById("s-discount").textContent  = "-₹0";
+    document.getElementById("s-delivery").textContent  = delivery === 0 ? "FREE" : "₹" + delivery;
+    document.getElementById("s-total").textContent     = "₹" + Math.max(grand, 0).toLocaleString("en-IN");
+    document.getElementById("codAmount").textContent   = "₹" + Math.max(grand, 0).toLocaleString("en-IN");
+    document.getElementById("stickyTotal").textContent = "₹" + Math.max(grand, 0).toLocaleString("en-IN");
+
+    if (couponDiscount > 0) {
+        document.getElementById("coupon-row").style.display = "flex";
+        document.getElementById("s-coupon").textContent = "-₹" + couponDiscount.toLocaleString("en-IN");
+    } else {
+        document.getElementById("coupon-row").style.display = "none";
+    }
+}
+
+/* ─── Coupons ─────────────────────────── */
+const COUPONS_DISPLAY = [
+    { code:"NIVA10",   label:"10% off on all orders",     type:"percent", discount:10 },
+    { code:"NIVA50",   label:"Flat ₹50 off",              type:"flat",    discount:50 },
+    { code:"RESIN15",  label:"15% off on resin art",      type:"percent", discount:15 },
+    { code:"FIRST100", label:"₹100 off your first order", type:"flat",    discount:100 },
+];
+
+let couponsVisible = false;
+
+function loadAvailableCoupons() {
+    const container = document.getElementById("availableCoupons");
+    container.innerHTML = COUPONS_DISPLAY.slice(0, 2).map(c => renderCouponChip(c)).join("");
+}
+
+function renderCouponChip(c) {
+    const isApplied = appliedCoupon === c.code;
+    return `
+    <div class="py-coupon-chip ${isApplied ? "applied" : ""}" id="chip-${c.code}">
+        <div>
+            <div class="py-coupon-code">${c.code}</div>
+            <div class="py-coupon-label">${c.label}</div>
+        </div>
+        <button class="py-coupon-btn ${isApplied ? "remove" : ""}"
+            onclick="${isApplied ? "removeCoupon()" : "applyCouponCode('" + c.code + "')"}">
+            ${isApplied ? "Remove" : "Apply"}
+        </button>
+    </div>`;
+}
+
+function toggleCouponList() {
+    const container = document.getElementById("availableCoupons");
+    const btn = document.getElementById("viewAllBtn");
+    if (!couponsVisible) {
+        container.innerHTML = COUPONS_DISPLAY.map(c => renderCouponChip(c)).join("");
+        btn.textContent = "↑ Hide coupons";
+        couponsVisible = true;
+    } else {
+        container.innerHTML = COUPONS_DISPLAY.slice(0, 2).map(c => renderCouponChip(c)).join("");
+        btn.textContent = "↓ View all coupons & offers";
+        couponsVisible = false;
+    }
+}
+
+function applyCouponCode(code) {
+    document.getElementById("couponInput").value = code;
+    applyCoupon();
+}
+
+async function applyCoupon() {
+    const code  = document.getElementById("couponInput").value.trim().toUpperCase();
+    const msgEl = document.getElementById("couponMsg");
+    if (!code) { showCouponMsg("Please enter a coupon code.", "error"); return; }
+
+    const token = localStorage.getItem("token");
+    if (!token) { showCouponMsg("Please log in to apply coupons.", "error"); return; }
+
+    try {
+        const res = await fetch("http://localhost:5000/validate-coupon", {
+            method:"POST",
+            headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + token },
+            body: JSON.stringify({ code, cartTotal: cartMRP })
+        });
+        const data = await res.json();
+        if (!res.ok) { showCouponMsg(data.message || "Invalid coupon.", "error"); return; }
+
+        couponDiscount = data.discountAmount;
+        appliedCoupon  = data.code;
+        showCouponMsg("🎉 " + data.label + " — Saving ₹" + data.discountAmount + "!", "success");
+        updatePriceSummary();
+        // refresh chip list
+        const container = document.getElementById("availableCoupons");
+        const toRender  = couponsVisible ? COUPONS_DISPLAY : COUPONS_DISPLAY.slice(0, 2);
+        container.innerHTML = toRender.map(c => renderCouponChip(c)).join("");
+    } catch(err) {
+        showCouponMsg("Network error. Please try again.", "error");
+    }
+}
+
+function removeCoupon() {
+    couponDiscount = 0;
+    appliedCoupon  = "";
+    document.getElementById("couponInput").value = "";
+    document.getElementById("couponMsg").style.display = "none";
+    updatePriceSummary();
+    const container = document.getElementById("availableCoupons");
+    const toRender  = couponsVisible ? COUPONS_DISPLAY : COUPONS_DISPLAY.slice(0, 2);
+    container.innerHTML = toRender.map(c => renderCouponChip(c)).join("");
+}
+
+function showCouponMsg(msg, type) {
+    const el = document.getElementById("couponMsg");
+    el.textContent = msg;
+    el.className   = "py-coupon-msg " + type;
+    el.style.display = "block";
+}
+
+/* ─── Payment Methods ─────────────────── */
+function selectMethod(m) {
+    // close current if same → toggle
+    if (activeMethod === m) {
+        document.getElementById("body-" + m).classList.remove("open");
+        document.getElementById("method-" + m).classList.remove("selected");
+        activeMethod = "";
+        return;
+    }
+
+    METHODS_ORDER.forEach(id => {
+        document.getElementById("body-" + id).classList.remove("open");
+        document.getElementById("method-" + id).classList.remove("selected");
+    });
+
+    document.getElementById("body-" + m).classList.add("open");
+    document.getElementById("method-" + m).classList.add("selected");
+    activeMethod = m;
+}
+
+function selectBank(el, bank) {
+    document.querySelectorAll(".py-nb-bank").forEach(b => b.classList.remove("active"));
+    el.classList.add("active");
+    selectedBank = bank;
+}
+
+function selectWallet(el, wallet) {
+    document.querySelectorAll(".py-wallet").forEach(w => w.classList.remove("active"));
+    el.classList.add("active");
+    selectedWallet = wallet;
+}
+
+function selectUPIApp(app) {
+    selectedUPIApp = app;
+    document.getElementById("upiStatus").className = "py-upi-status ok";
+    document.getElementById("upiStatus").textContent = app + " selected. Continue to place order.";
+}
+
+function verifyUPI() {
+    const upiId = document.getElementById("upiIdInput").value.trim();
+    const statusEl = document.getElementById("upiStatus");
+    // Basic format check: something@something
+    if (/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upiId)) {
+        statusEl.className = "py-upi-status ok";
+        statusEl.textContent = "✅ " + upiId + " looks valid. Proceed to place order.";
+    } else {
+        statusEl.className = "py-upi-status err";
+        statusEl.textContent = "❌ Invalid UPI ID format. Try: yourname@ybl";
+    }
+}
+
+function formatCard(el) {
+    let v = el.value.replace(/\D/g, "").substring(0, 16);
+    el.value = v.replace(/(.{4})/g, "$1 ").trim();
+}
+function formatExpiry(el) {
+    let v = el.value.replace(/\D/g, "").substring(0, 4);
+    if (v.length >= 3) v = v.substring(0, 2) + "/" + v.substring(2);
+    el.value = v;
+}
+
+/* ─── Place Order ─────────────────────── */
+async function placeOrder() {
+    if (!activeMethod) {
+        alert("Please select a payment method to continue.");
+        return;
+    }
+
+    const cart   = JSON.parse(localStorage.getItem("cart") || "[]");
+    const email  = localStorage.getItem("email");
+    const token  = localStorage.getItem("token");
+    const cust   = JSON.parse(localStorage.getItem("customer") || "{}");
+
+    if (!email || !token) {
+        alert("Please log in to place your order.");
+        window.location.href = "login.html";
+        return;
+    }
+    if (!cust.name) {
+        alert("Please add a delivery address first.");
+        window.location.href = "checkout.html";
+        return;
+    }
+    if (!cart.length) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    // Validate sub-method
+    if (activeMethod === "card") {
+        const cardNo = document.getElementById("cardNo").value.replace(/\s/g, "");
+        const expiry = document.getElementById("expiry").value;
+        const cvv    = document.getElementById("cvv").value;
+        const cname  = document.getElementById("cardName").value.trim();
+        if (cardNo.length < 16 || !expiry || cvv.length < 3 || !cname) {
+            alert("Please fill all card details correctly."); return;
+        }
+    }
+    if (activeMethod === "netbanking" && !selectedBank) {
+        alert("Please select your bank."); return;
+    }
+    if (activeMethod === "wallet" && !selectedWallet) {
+        alert("Please select a wallet."); return;
+    }
+
+    const btn       = document.getElementById("placeBtn");
+    const stickyBtn = document.getElementById("stickyPlaceBtn");
+    btn.disabled       = true;
+    stickyBtn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>&nbsp; Placing Order…';
+    stickyBtn.textContent = "Processing…";
+
+    const fullAddress = `${cust.houseNo}, ${cust.address}, ${cust.city}, ${cust.state} - ${cust.pincode}`;
+    const grand       = Math.max(cartMRP + deliveryFee - couponDiscount, 0);
+
+    // Map method name
+    const methodNames = {
+        upi:"UPI", card:"Card", netbanking:"Net Banking",
+        wallet: selectedWallet || "Wallet", cod:"Cash On Delivery"
+    };
+
+    try {
+        // Build products array
+        const products = cart.map(item => ({
+            product: item.product,
+            price:   item.price,
+            quantity:item.quantity,
+            image:   item.image || ""
+        }));
+
+        const orderPayload = {
+            userEmail:     email,
+            products,
+            totalAmount:   grand,
+            deliveryCharge:deliveryFee,
+            couponCode:    appliedCoupon || "",
+            couponDiscount,
+            customerName:  cust.name,
+            mobile:        cust.mobile,
+            address:       fullAddress,
+            city:          cust.city,
+            state:         cust.state,
+            pincode:       cust.pincode,
+            landmark:      cust.landmark || "",
+            paymentMethod: methodNames[activeMethod],
+            paymentStatus: activeMethod === "cod" ? "Pending" : "Pending",
+            status:        activeMethod === "cod" ? "Pending" : "Confirmed",
+            // Legacy fields for account.html compatibility
+            product:       cart.map(i => i.product).join(", "),
+            price:         grand,
+            quantity:      cart.reduce((s, i) => s + i.quantity, 0)
+        };
+
+        const res  = await fetch("http://localhost:5000/order", {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":"Bearer " + token
+            },
+            body: JSON.stringify(orderPayload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || "Order failed");
+
+        // Save to localStorage for success page
+        localStorage.setItem("lastOrder", JSON.stringify({
+            orderId:   data.orderId || "NA" + Date.now(),
+            items:     cart,
+            total:     grand,
+            mrp:       cartMRP,
+            delivery:  deliveryFee,
+            coupon:    couponDiscount,
+            method:    methodNames[activeMethod],
+            address:   fullAddress,
+            name:      cust.name,
+            mobile:    cust.mobile,
+            date:      new Date().toLocaleDateString("en-IN", { day:"numeric", month:"long", year:"numeric" }),
+            deliveryEst: calculateEstimatedDelivery()
+        }));
+
+        // Clear cart
+        localStorage.removeItem("cart");
+        window.location.href = "success.html";
+
+    } catch(err) {
+        console.error(err);
+        alert("Something went wrong: " + err.message + ". Please try again.");
+        btn.disabled       = false;
+        stickyBtn.disabled = false;
+        btn.innerHTML = '🔒 Place Order Securely';
+        stickyBtn.textContent = "🔒 Place Order";
+    }
 }
 </script>
-
 </body>
 </html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Partner Portal – Niva Aura Resin Art</title>
+    <meta name="description" content="Niva Aura Delivery Partner App – View assigned orders, confirm delivery with OTP.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --teal:   #0A3C4A;
+            --gold:   #D4AF37;
+            --green:  #15803D;
+            --rose:   #E84A5F;
+            --orange: #F97316;
+            --bg:     #F1F5F9;
+            --white:  #FFFFFF;
+            --border: #E2E8F0;
+            --muted:  #64748B;
+            --shadow: 0 4px 20px rgba(0,0,0,.08);
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Plus Jakarta Sans', sans-serif; background:var(--bg); color:#1E293B; min-height:100vh; }
+
+        /* ── AUTH SCREEN ── */
+        .auth-wrap {
+            min-height:100vh; display:flex; align-items:center; justify-content:center;
+            background:linear-gradient(135deg, var(--teal) 0%, #155E75 100%);
+            padding:24px;
+        }
+        .auth-card {
+            background:white; border-radius:24px; padding:40px;
+            width:100%; max-width:420px;
+            box-shadow:0 20px 60px rgba(0,0,0,.25);
+        }
+        .auth-logo { text-align:center; margin-bottom:28px; }
+        .auth-logo .logo-icon { font-size:48px; }
+        .auth-logo h2 { font-size:22px; font-weight:800; color:var(--teal); margin-top:8px; }
+        .auth-logo p  { font-size:13px; color:var(--muted); margin-top:4px; }
+        .auth-input-group { margin-bottom:16px; }
+        .auth-input-group label { display:block; font-size:12px; font-weight:700; color:#374151; margin-bottom:6px; }
+        .auth-input-group input {
+            width:100%; padding:13px 16px;
+            border:1.5px solid var(--border); border-radius:12px;
+            font-size:14px; font-family:'Plus Jakarta Sans',sans-serif;
+            outline:none; transition:.2s;
+        }
+        .auth-input-group input:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(10,60,74,.12); }
+        .auth-btn {
+            width:100%; padding:14px;
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            color:white; border:none; border-radius:12px;
+            font-size:15px; font-weight:800;
+            font-family:'Plus Jakarta Sans',sans-serif;
+            cursor:pointer; transition:.2s;
+            box-shadow:0 4px 16px rgba(10,60,74,.3);
+        }
+        .auth-btn:hover { transform:translateY(-2px); }
+        .auth-err { color:#DC2626; font-size:12px; font-weight:600; margin-top:10px; text-align:center; }
+
+        /* ── APP SHELL ── */
+        .app-shell { display:none; flex-direction:column; min-height:100vh; }
+        .app-shell.visible { display:flex; }
+
+        /* ── TOP NAV ── */
+        .app-nav {
+            background:var(--teal); padding:16px 24px;
+            display:flex; align-items:center; justify-content:space-between;
+            box-shadow:0 2px 12px rgba(0,0,0,.15);
+        }
+        .app-nav-brand { display:flex; align-items:center; gap:12px; }
+        .app-nav-brand .nav-icon { font-size:28px; }
+        .app-nav-brand h2 { font-size:18px; font-weight:800; color:white; }
+        .app-nav-brand p  { font-size:11px; color:rgba(255,255,255,.7); }
+        .app-nav-right { display:flex; align-items:center; gap:12px; }
+        .nav-name-badge {
+            background:rgba(255,255,255,.15); color:white;
+            font-size:13px; font-weight:700;
+            padding:6px 16px; border-radius:20px;
+        }
+        .nav-logout-btn {
+            background:var(--rose); color:white; border:none;
+            padding:8px 16px; border-radius:20px;
+            font-size:13px; font-weight:700; cursor:pointer;
+        }
+
+        /* ── STATS ── */
+        .stats-bar {
+            display:flex; gap:16px; padding:20px 24px;
+            background:white; border-bottom:1px solid var(--border);
+            overflow-x:auto;
+        }
+        .stat-chip {
+            display:flex; flex-direction:column; align-items:center;
+            background:#F8FAFC; border:1px solid var(--border);
+            border-radius:14px; padding:14px 24px; min-width:110px;
+            white-space:nowrap;
+        }
+        .stat-chip .s-num { font-size:24px; font-weight:800; color:var(--teal); }
+        .stat-chip .s-lbl { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+
+        /* ── ORDERS LIST ── */
+        .orders-section { flex:1; padding:20px 24px; }
+        .section-header-bar {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:16px; flex-wrap:wrap; gap:12px;
+        }
+        .section-header-bar h3 { font-size:18px; font-weight:800; color:var(--teal); }
+        .refresh-btn {
+            background:var(--teal); color:white; border:none;
+            padding:8px 20px; border-radius:20px; font-size:13px; font-weight:700;
+            cursor:pointer; display:flex; align-items:center; gap:6px;
+        }
+
+        .order-card {
+            background:white; border-radius:16px;
+            border:1px solid var(--border); margin-bottom:16px;
+            box-shadow:var(--shadow); overflow:hidden;
+            transition:.2s;
+        }
+        .order-card:hover { box-shadow:0 8px 30px rgba(0,0,0,.12); }
+
+        .order-card-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding:16px 20px; background:#F8FAFC;
+            border-bottom:1px solid var(--border);
+            flex-wrap:wrap; gap:8px;
+        }
+        .order-id-label { font-size:13px; font-weight:800; color:var(--teal); }
+        .order-id-sub   { font-size:11px; color:var(--muted); margin-top:2px; }
+        .status-badge {
+            font-size:11px; font-weight:800; padding:5px 14px; border-radius:20px;
+            text-transform:uppercase; letter-spacing:.5px;
+        }
+        .status-badge.outfordelivery { background:#FEF3C7; color:#92400E; }
+        .status-badge.delivered      { background:#DCFCE7; color:var(--green); }
+        .status-badge.default        { background:#F1F5F9; color:var(--muted); }
+
+        .order-card-body { padding:20px; }
+        .customer-row {
+            display:flex; align-items:flex-start; gap:14px; margin-bottom:16px;
+        }
+        .customer-icon { font-size:36px; }
+        .customer-info h4 { font-size:15px; font-weight:800; color:#1E293B; }
+        .customer-info p  { font-size:13px; color:var(--muted); margin-top:2px; line-height:1.6; }
+        .customer-phone-btn {
+            display:inline-flex; align-items:center; gap:6px;
+            background:#DCFCE7; color:var(--green);
+            border:none; border-radius:20px; padding:6px 14px;
+            font-size:12px; font-weight:700; cursor:pointer; margin-top:8px;
+            text-decoration:none;
+        }
+        .items-list {
+            background:#F8FAFC; border-radius:12px; padding:14px;
+            border:1px solid var(--border); margin-bottom:16px;
+        }
+        .item-row { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; }
+        .item-row span:first-child { color:#374151; font-weight:600; }
+        .item-row span:last-child  { color:var(--teal); font-weight:800; }
+
+        .amount-row {
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            color:white; border-radius:12px;
+            padding:12px 16px; display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:16px;
+        }
+        .amount-row .label { font-size:12px; opacity:.8; }
+        .amount-row .value { font-size:20px; font-weight:800; }
+        .amount-row .method{ font-size:11px; opacity:.75; margin-top:2px; }
+
+        /* OTP CONFIRM */
+        .otp-section {
+            background:#FEF3C7; border:1.5px solid #F59E0B;
+            border-radius:14px; padding:16px;
+        }
+        .otp-section h4 { font-size:14px; font-weight:800; color:#92400E; margin-bottom:10px; }
+        .otp-input-row { display:flex; gap:10px; }
+        .otp-input {
+            flex:1; padding:13px; text-align:center;
+            border:2px solid #F59E0B; border-radius:12px;
+            font-size:22px; font-weight:800; letter-spacing:6px;
+            outline:none; font-family:'Plus Jakarta Sans',sans-serif;
+            color:var(--teal);
+        }
+        .otp-confirm-btn {
+            padding:13px 24px;
+            background:var(--green); color:white; border:none; border-radius:12px;
+            font-size:14px; font-weight:800;
+            font-family:'Plus Jakarta Sans',sans-serif; cursor:pointer;
+            white-space:nowrap; transition:.2s;
+        }
+        .otp-confirm-btn:hover { background:#166534; }
+        .otp-confirm-btn:disabled { opacity:.6; cursor:not-allowed; }
+        .otp-result { font-size:13px; font-weight:700; margin-top:8px; }
+        .otp-result.ok  { color:var(--green); }
+        .otp-result.err { color:#DC2626; }
+
+        .delivered-badge {
+            background:#DCFCE7; border:1.5px solid #86EFAC;
+            border-radius:14px; padding:16px;
+            display:flex; align-items:center; gap:12px;
+            font-size:14px; font-weight:700; color:var(--green);
+        }
+
+        /* EMPTY / LOADING */
+        .empty-state { text-align:center; padding:60px 24px; }
+        .empty-state .e-icon { font-size:60px; margin-bottom:16px; }
+        .empty-state h3 { font-size:20px; font-weight:800; color:var(--teal); margin-bottom:8px; }
+        .empty-state p  { font-size:14px; color:var(--muted); }
+
+        .spinner-wrap { text-align:center; padding:40px; font-size:14px; color:var(--muted); }
+        .spinning { display:inline-block; animation:spin .7s linear infinite; font-size:28px; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        @media(max-width:500px){
+            .app-nav { padding:14px 16px; }
+            .orders-section { padding:16px; }
+            .stats-bar { padding:14px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div class="auth-wrap" id="authScreen">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <div class="logo-icon">🚴</div>
+            <h2>Delivery Partner Login</h2>
+            <p>Niva Aura Resin Art – Delivery Portal</p>
+        </div>
+        <div class="auth-input-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="loginMobile" placeholder="9876543210" maxlength="10">
+        </div>
+        <div class="auth-input-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••">
+        </div>
+        <button class="auth-btn" onclick="loginDeliveryBoy()" id="loginBtn">Login to Portal</button>
+        <div class="auth-err" id="loginError"></div>
+    </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="app-shell" id="appShell">
+
+    <!-- TOP NAV -->
+    <nav class="app-nav">
+        <div class="app-nav-brand">
+            <div class="nav-icon">🚴</div>
+            <div>
+                <h2>Delivery Portal</h2>
+                <p>Niva Aura Resin Art</p>
+            </div>
+        </div>
+        <div class="app-nav-right">
+            <div class="nav-name-badge" id="navName">Partner</div>
+            <button class="nav-logout-btn" onclick="logoutDelivery()">Logout</button>
+        </div>
+    </nav>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat-chip">
+            <div class="s-num" id="statTotal">0</div>
+            <div class="s-lbl">Total Assigned</div>
+        </div>
+        <div class="stat-chip">
+            <div class="s-num" id="statPending">0</div>
+            <div class="s-lbl">Out for Delivery</div>
+        </div>
+        <div class="stat-chip">
+            <div class="s-num" id="statDone">0</div>
+            <div class="s-lbl">Delivered Today</div>
+        </div>
+    </div>
+
+    <!-- ORDERS SECTION -->
+    <div class="orders-section">
+        <div class="section-header-bar">
+            <h3>📦 My Assigned Orders</h3>
+            <button class="refresh-btn" onclick="loadOrders()">⟳ Refresh</button>
+        </div>
+        <div id="ordersList">
+            <div class="spinner-wrap"><div class="spinning">⟳</div><br>Loading orders…</div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const API = "http://localhost:5000";
+
+/* ── CHECK EXISTING TOKEN ─────────────────────── */
+window.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("deliveryToken");
+    const name  = localStorage.getItem("deliveryName");
+    if (token && name) {
+        showApp(name);
+        loadOrders();
+    }
+});
+
+/* ── LOGIN ────────────────────────────────────── */
+async function loginDeliveryBoy() {
+    const mobile   = document.getElementById("loginMobile").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+    const errEl    = document.getElementById("loginError");
+    const btn      = document.getElementById("loginBtn");
+    errEl.textContent = "";
+
+    if (!mobile || !password) { errEl.textContent = "Enter mobile and password."; return; }
+
+    btn.textContent = "Logging in…";
+    btn.disabled    = true;
+    try {
+        const res  = await fetch(`${API}/delivery-boy/login`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json" },
+            body: JSON.stringify({ mobile, password })
+        });
+        const data = await res.json();
+        if (!res.ok) { errEl.textContent = data.message; btn.textContent = "Login to Portal"; btn.disabled = false; return; }
+        localStorage.setItem("deliveryToken", data.token);
+        localStorage.setItem("deliveryName", data.name);
+        showApp(data.name);
+        loadOrders();
+    } catch {
+        errEl.textContent = "Server unreachable. Make sure backend is running.";
+        btn.textContent = "Login to Portal";
+        btn.disabled = false;
+    }
+}
+
+function showApp(name) {
+    document.getElementById("authScreen").style.display = "none";
+    document.getElementById("appShell").classList.add("visible");
+    document.getElementById("navName").textContent = "👤 " + name;
+}
+
+function logoutDelivery() {
+    localStorage.removeItem("deliveryToken");
+    localStorage.removeItem("deliveryName");
+    location.reload();
+}
+
+/* ── LOAD ORDERS ──────────────────────────────── */
+async function loadOrders() {
+    const token = localStorage.getItem("deliveryToken");
+    const listEl = document.getElementById("ordersList");
+    listEl.innerHTML = '<div class="spinner-wrap"><div class="spinning">⟳</div><br>Loading orders…</div>';
+    try {
+        const res  = await fetch(`${API}/delivery/orders`, {
+            headers:{ "Authorization": "Bearer " + token }
+        });
+        const data = await res.json();
+        if (!res.ok) { listEl.innerHTML = `<div class="empty-state"><div class="e-icon">⚠️</div><h3>${data.message}</h3></div>`; return; }
+
+        const todayStr = new Date().toDateString();
+        const pending   = data.filter(o => o.status === "Out for Delivery");
+        const delivered = data.filter(o => o.status === "Delivered" && new Date(o.date).toDateString() === todayStr);
+
+        document.getElementById("statTotal").textContent   = data.length;
+        document.getElementById("statPending").textContent = pending.length;
+        document.getElementById("statDone").textContent    = delivered.length;
+
+        if (!data.length) {
+            listEl.innerHTML = `<div class="empty-state"><div class="e-icon">📭</div><h3>No orders assigned yet</h3><p>Your orders will appear here once the admin assigns them to you.</p></div>`;
+            return;
+        }
+
+        listEl.innerHTML = data.map(order => renderOrderCard(order)).join("");
+    } catch {
+        listEl.innerHTML = '<div class="empty-state"><div class="e-icon">🔴</div><h3>Connection error</h3><p>Backend server may not be running.</p></div>';
+    }
+}
+
+function renderOrderCard(o) {
+    const items = (o.products && o.products.length)
+        ? o.products.map(p => `<div class="item-row"><span>${p.product} × ${p.quantity}</span><span>₹${(p.price * p.quantity).toLocaleString("en-IN")}</span></div>`).join("")
+        : `<div class="item-row"><span>${o.product || "Product"} × ${o.quantity || 1}</span><span>₹${(o.price || 0).toLocaleString("en-IN")}</span></div>`;
+
+    const total   = o.totalAmount || o.price || 0;
+    const method  = o.paymentMethod || "—";
+    const isOFD   = o.status === "Out for Delivery";
+    const isDone  = o.status === "Delivered";
+    const badgeCls = isOFD ? "outfordelivery" : (isDone ? "delivered" : "default");
+
+    const otpSection = isOFD ? `
+        <div class="otp-section">
+            <h4>🔐 Confirm Delivery with Customer OTP</h4>
+            <div class="otp-input-row">
+                <input type="text" class="otp-input" id="otp-${o._id}" placeholder="0000" maxlength="4" inputmode="numeric">
+                <button class="otp-confirm-btn" id="otpBtn-${o._id}" onclick="confirmDelivery('${o._id}')">✓ Confirm</button>
+            </div>
+            <div class="otp-result" id="otpResult-${o._id}"></div>
+        </div>` : "";
+
+    const deliveredBadge = isDone ? `
+        <div class="delivered-badge">
+            ✅ &nbsp; Delivered successfully · OTP verified
+        </div>` : "";
+
+    return `
+    <div class="order-card" id="card-${o._id}">
+        <div class="order-card-header">
+            <div>
+                <div class="order-id-label">🆔 ${o.orderId || o._id}</div>
+                <div class="order-id-sub">${new Date(o.date).toLocaleString("en-IN")}</div>
+            </div>
+            <span class="status-badge ${badgeCls}">${o.status}</span>
+        </div>
+        <div class="order-card-body">
+            <div class="customer-row">
+                <div class="customer-icon">👤</div>
+                <div class="customer-info">
+                    <h4>${o.customerName || "Customer"}</h4>
+                    <p>📍 ${o.address || ""}<br>${o.city || ""}, ${o.state || ""} – ${o.pincode || ""}</p>
+                    ${o.mobile ? `<a href="tel:${o.mobile}" class="customer-phone-btn">📞 ${o.mobile}</a>` : ""}
+                </div>
+            </div>
+            <div class="items-list">${items}</div>
+            <div class="amount-row">
+                <div>
+                    <div class="label">Total Amount</div>
+                    <div class="method">${method}</div>
+                </div>
+                <div class="value">₹${total.toLocaleString("en-IN")}</div>
+            </div>
+            ${otpSection}
+            ${deliveredBadge}
+        </div>
+    </div>`;
+}
+
+/* ── CONFIRM DELIVERY ─────────────────────────── */
+async function confirmDelivery(orderId) {
+    const otp    = document.getElementById(`otp-${orderId}`).value.trim();
+    const resultEl = document.getElementById(`otpResult-${orderId}`);
+    const btn    = document.getElementById(`otpBtn-${orderId}`);
+    const token  = localStorage.getItem("deliveryToken");
+
+    if (otp.length !== 4) { resultEl.className = "otp-result err"; resultEl.textContent = "Enter 4-digit OTP from customer."; return; }
+
+    btn.disabled = true;
+    btn.textContent = "Verifying…";
+    resultEl.textContent = "";
+
+    try {
+        const res  = await fetch(`${API}/delivery/confirm/${orderId}`, {
+            method:"POST",
+            headers:{ "Content-Type":"application/json", "Authorization":"Bearer " + token },
+            body: JSON.stringify({ otp })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            resultEl.className = "otp-result err";
+            resultEl.textContent = "❌ " + data.message;
+            btn.disabled = false;
+            btn.textContent = "✓ Confirm";
+            return;
+        }
+        resultEl.className  = "otp-result ok";
+        resultEl.textContent = "✅ Delivery confirmed! Great job.";
+        setTimeout(() => loadOrders(), 1500);
+    } catch {
+        resultEl.className = "otp-result err";
+        resultEl.textContent = "Network error. Try again.";
+        btn.disabled = false;
+        btn.textContent = "✓ Confirm";
+    }
+}
+</script>
+</body>
+</html>

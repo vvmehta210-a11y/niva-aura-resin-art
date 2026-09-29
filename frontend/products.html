@@ -1,185 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Products</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Catalog - Niva Aura Resin Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<h2>Write Review</h2>
 
-<select id="rating">
+    <!-- Header Navigation -->
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="images/logo.png" alt="Niva Aura Logo">
+            <div class="logo-text">
+                <h2>Niva Aura</h2>
+                <span>RESIN STUDIO</span>
+            </div>
+        </a>
 
-<option value="5">⭐⭐⭐⭐⭐</option>
-<option value="4">⭐⭐⭐⭐</option>
-<option value="3">⭐⭐⭐</option>
-<option value="2">⭐⭐</option>
-<option value="1">⭐</option>
+        <div class="header-right">
+            <div id="userProfile"></div>
+            <div class="cart-btn-wrapper">
+                <button class="cart-icon-btn" onclick="goToCart()">
+                    🛒 <span>Cart</span>
+                    <span id="cartCount" class="cart-badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-</select>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="index.html">🏠 Home</a>
+        <a href="products.html" class="active">🛍️ Products</a>
+        <a href="gallery.html">🖼️ Gallery</a>
+        <a href="about.html">ℹ️ About Studio</a>
+        <a href="contact.html">📞 Contact & Custom</a>
+        <a href="wishlist.html">❤️ Wishlist</a>
+        <a href="checkout.html">💳 Checkout</a>
+    </nav>
 
-<br><br>
+    <!-- Header Banner -->
+    <div class="gallery-hero" style="text-align:center; padding: 50px 20px 30px; background: white;">
+        <h1 style="font-size: 42px; font-weight: 800; color: var(--deep-teal);">Our Handmade Resin Collection</h1>
+        <p style="color: var(--text-muted); margin-top: 8px;">Explore unique resin art pieces handcrafted with premium epoxy, real minerals, and gold leaf.</p>
+    </div>
 
-<textarea
-id="review"
-placeholder="Write Review">
-</textarea>
+    <!-- Product Filter & Search Bar -->
+    <div class="filter-container">
+        <div class="search-filter-wrapper">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Search resin products..." onkeyup="searchProducts()">
+            </div>
+            <div class="category-pills">
+                <button class="pill-btn active" data-category="All" onclick="selectCategory('All', this)">All Items</button>
+                <button class="pill-btn" data-category="Wall Clocks" onclick="selectCategory('Wall Clocks', this)">Wall Clocks</button>
+                <button class="pill-btn" data-category="Coasters" onclick="selectCategory('Coasters', this)">Coasters</button>
+                <button class="pill-btn" data-category="Wash Basins" onclick="selectCategory('Wash Basins', this)">Wash Basins</button>
+                <button class="pill-btn" data-category="Keychains" onclick="selectCategory('Keychains', this)">Keychains</button>
+                <button class="pill-btn" data-category="Nameplates" onclick="selectCategory('Nameplates', this)">Nameplates</button>
+            </div>
+        </div>
+    </div>
 
-<br><br>
+    <!-- Products Grid -->
+    <div id="products" class="products-grid" style="margin-top: 30px;"></div>
 
-<button onclick="submitReview()">
-Submit Review
-</button>
+    <!-- Interactive Lightbox Image View Modal -->
+    <div id="imageModal" class="modal-overlay" onclick="if(event.target === this) closeImageModal()">
+        <div class="lightbox-content">
+            <button class="modal-close-btn" onclick="closeImageModal()" title="Close (ESC)">&times;</button>
 
-<hr>
+            <div class="lightbox-gallery-side">
+                <div class="lightbox-main-img-wrap">
+                    <img id="modalMainImage" src="" alt="Product View">
+                </div>
+                <div class="lightbox-thumbnails" id="modalThumbnails"></div>
+            </div>
 
-<h2>Customer Reviews</h2>
+            <div class="lightbox-details-side">
+                <span id="modalBadge" class="lightbox-badge">Handcrafted</span>
+                <h2 id="modalTitle" class="lightbox-title">Product Name</h2>
+                <div id="modalPrice" class="lightbox-price">&#8377;0</div>
+                <p id="modalDesc" class="lightbox-desc">Description text</p>
 
-<div id="reviews"></div>
+                <div class="lightbox-specs">
+                    <h4>Artisan Craft Specifications</h4>
+                    <ul id="modalSpecsList"></ul>
+                </div>
 
-<script>
+                <div class="lightbox-qty-row">
+                    <span style="font-weight: 700; color: var(--text-primary);">Quantity:</span>
+                    <div class="qty-control">
+                        <button class="qty-btn" onclick="changeModalQty(-1)">-</button>
+                        <input type="number" id="modalQtyInput" class="qty-input" value="1" min="1" readonly>
+                        <button class="qty-btn" onclick="changeModalQty(1)">+</button>
+                    </div>
+                </div>
 
-async function submitReview(){
+                <div class="lightbox-actions">
+                    <button class="btn-modal-cart" onclick="addModalProductToCart()">
+                        🛒 Add To Cart
+                    </button>
+                    <button class="btn-modal-buy" onclick="buyModalProductNow()">
+                        ⚡ Buy Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    const product =
-    document.getElementById(
-    "productName"
-    ).innerText;
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Niva Aura Resin Art</h3>
+                <p>Creating luxury epoxy resin decor, custom clocks, vanity basins, botanical coasters, and bespoke anniversary gifts.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products Catalog</a></li>
+                    <li><a href="gallery.html">Art Gallery</a></li>
+                    <li><a href="checkout.html">Checkout</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>📧 Email: nivaaura@gmail.com</p>
+                <p>📞 Phone: +91 98765 43210</p>
+            </div>
+            <div class="footer-col">
+                <h3>Studio Location</h3>
+                <p>📍 Ahmedabad, Gujarat, India</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Niva Aura Resin Art Studio. All Rights Reserved.</p>
+        </div>
+    </footer>
 
-    const user =
-    localStorage.getItem("name");
-
-    const rating =
-    document.getElementById(
-    "rating"
-    ).value;
-
-    const review =
-    document.getElementById(
-    "review"
-    ).value;
-
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/review",
-    {
-        method:"POST",
-
-        headers:{
-            "Content-Type":
-            "application/json"
-        },
-
-        body:JSON.stringify({
-
-            product,
-            user,
-            rating,
-            review
-
-        })
-    });
-
-    const data =
-    await response.json();
-
-    alert(data.message);
-
-    loadReviews();
-}
-</script>
-
-<h1>Our Products</h1>
-
-<div class="product">
-
-    <h3>Resin Keychains</h3>
-
-    <button onclick="checkLogin('Resin Keychains')">
-    Buy Now
-</button>
-
-</div>
-
-<div class="product">
-
-    <h3>Resin Coasters</h3>
-
-    <button onclick="checkLogin('Resin Coasters')">
-    Buy Now
-</button>
-
-</div>
-
-<div class="product">
-
-    <h3>Wall Clocks</h3>
-
-    <button onclick="checkLogin('Wall Clocks')">
-    Buy Now
-</button>
-
-</div>
-
-<div class="product">
-
-    <h3>Name Plates</h3>
-
-    <button onclick="checkLogin('Name Plates')">
-        Buy Now
-    </button>
-
-</div>
-
-<div class="product">
-
-    <h3>Customized Gifts</h3>
-
-    <button onclick="checkLogin('Customized Gifts')">
-        Buy Now
-    </button>
-
-</div>
-
-<a href="index.html">Back Home</a>
-
-<script>
-
-function buyNow(productName) {
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-
-        alert("Please Login or Sign Up first to purchase this item.");
-
-        window.location.href = "login.html";
-
-        return;
-    }
-
-    localStorage.setItem("selectedProduct", productName);
-
-    window.location.href = "payment.html";
-}
-
-</script>
-<script>
-function checkLogin(productName) {
-
-    const email = localStorage.getItem("email");
-
-    if (!email) {
-
-        alert("Please Sign Up or Login first to purchase this item.");
-
-        window.location.href = "login.html";
-        return;
-    }
-
-    localStorage.setItem("selectedProduct", productName);
-
-    window.location.href = "payment.html";
-}
-</script>
+    <script src="script.js"></script>
 </body>
+
 </html>

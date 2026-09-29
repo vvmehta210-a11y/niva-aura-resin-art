@@ -1,21 +1,435 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Order Success</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed Successfully – Niva Aura Resin Art</title>
+    <meta name="description" content="Your order has been placed successfully with Niva Aura Resin Art.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold:  #D4AF37;
+            --teal:  #0A3C4A;
+            --green: #15803D;
+            --bg:    #F6F8FA;
+            --white: #FFFFFF;
+            --border:#E2E8F0;
+            --muted: #6B7280;
+            --shadow:0 4px 24px rgba(0,0,0,.08);
+            --radius:20px;
+        }
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body {
+            font-family:'Plus Jakarta Sans', sans-serif;
+            background:linear-gradient(135deg, #F0FDF4 0%, #ECFDF5 40%, #F6F8FA 100%);
+            min-height:100vh;
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:flex-start;
+            padding:32px 20px 80px;
+        }
+
+        /* ──── TOPBAR ──── */
+        .su-topbar {
+            width:100%; max-width:700px;
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:36px;
+        }
+        .su-brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
+        .su-brand img { width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); }
+        .su-brand-text h2 { font-size:20px; font-weight:800; color:var(--teal); line-height:1; }
+        .su-brand-text span { font-size:9px; letter-spacing:2px; color:var(--gold); font-weight:700; text-transform:uppercase; }
+
+        /* ──── SUCCESS ANIMATION ──── */
+        .su-hero {
+            text-align:center;
+            margin-bottom:32px;
+        }
+        .su-circle {
+            width:100px; height:100px;
+            background:linear-gradient(135deg, #16A34A, #15803D);
+            border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 20px;
+            animation:popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow:0 8px 32px rgba(21,128,61,.35);
+        }
+        @keyframes popIn {
+            0%   { transform:scale(0); opacity:0; }
+            80%  { transform:scale(1.1); }
+            100% { transform:scale(1); opacity:1; }
+        }
+        .su-checkmark {
+            font-size:48px;
+            animation:checkFade 0.4s ease 0.4s both;
+        }
+        @keyframes checkFade { from { opacity:0; transform:scale(0.5); } to { opacity:1; transform:scale(1); } }
+        .su-title {
+            font-size:30px; font-weight:800; color:var(--teal);
+            margin-bottom:8px;
+        }
+        .su-subtitle { font-size:15px; color:var(--muted); }
+
+        /* ──── CONFETTI ──── */
+        .confetti-wrap { position:relative; height:0; overflow:visible; }
+        .confetti-wrap span {
+            position:absolute; width:10px; height:10px;
+            border-radius:2px;
+            animation:confettiFall 1.2s ease-out forwards;
+        }
+        @keyframes confettiFall {
+            0%   { transform:translateY(-20px) rotate(0deg); opacity:1; }
+            100% { transform:translateY(120px) rotate(360deg); opacity:0; }
+        }
+
+        /* ──── MAIN CARD ──── */
+        .su-card {
+            background:var(--white); border-radius:var(--radius);
+            box-shadow:var(--shadow); padding:28px;
+            border:1px solid var(--border);
+            width:100%; max-width:700px;
+            margin-bottom:20px;
+            animation:slideUp 0.5s ease 0.2s both;
+        }
+        @keyframes slideUp {
+            from { opacity:0; transform:translateY(20px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ──── ORDER ID BANNER ──── */
+        .su-order-id-banner {
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            border-radius:14px; padding:18px 22px;
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:24px;
+            flex-wrap:wrap; gap:12px;
+        }
+        .su-order-id-label { font-size:12px; color:rgba(255,255,255,.7); font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+        .su-order-id-val   { font-size:15px; font-weight:800; color:white; letter-spacing:1.5px; }
+        .su-order-date     { font-size:12px; color:rgba(255,255,255,.75); }
+
+        /* ──── SECTION HEADER ──── */
+        .su-sec { font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:12px; }
+
+        /* ──── PRODUCT ITEMS ──── */
+        .su-items { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+        .su-item {
+            display:flex; gap:14px; align-items:center;
+            background:#F8FAFC; border-radius:12px; padding:14px;
+            border:1px solid var(--border);
+        }
+        .su-item-img { width:60px; height:60px; border-radius:10px; object-fit:cover; background:#E2E8F0; flex-shrink:0; }
+        .su-item-info { flex:1; }
+        .su-item-name { font-size:14px; font-weight:700; color:var(--teal); }
+        .su-item-qty  { font-size:12px; color:var(--muted); margin-top:2px; }
+        .su-item-price{ font-size:15px; font-weight:800; color:var(--teal); white-space:nowrap; }
+
+        /* ──── PRICE BREAKDOWN ──── */
+        .su-price-box { background:#F8FAFC; border-radius:14px; padding:20px; border:1px solid var(--border); margin-bottom:20px; }
+        .su-price-row { display:flex; justify-content:space-between; font-size:14px; color:var(--muted); margin-bottom:10px; }
+        .su-price-row.total { font-size:17px; font-weight:800; color:var(--teal); border-top:2px solid var(--border); padding-top:12px; margin-top:4px; }
+        .su-price-row .green { color:var(--green); font-weight:700; }
+        .su-price-row .rose  { color:#DC2626; font-weight:700; }
+
+        /* ──── DELIVERY INFO ──── */
+        .su-delivery-box {
+            background:linear-gradient(135deg, #ECFDF5, #F0FDF4);
+            border:1.5px solid #A7F3D0; border-radius:14px;
+            padding:18px 20px; display:flex; align-items:center; gap:16px;
+            margin-bottom:24px;
+        }
+        .su-del-icon  { font-size:36px; }
+        .su-del-text h4 { font-size:15px; font-weight:800; color:var(--green); }
+        .su-del-text p  { font-size:13px; color:#374151; margin-top:4px; }
+        .su-del-date    { font-weight:800; color:var(--teal); }
+
+        /* ──── PAYMENT METHOD ──── */
+        .su-method-row {
+            display:flex; align-items:center; gap:12px;
+            background:#F8FAFC; border-radius:12px; padding:14px 18px;
+            border:1px solid var(--border); margin-bottom:24px;
+        }
+        .su-method-icon { font-size:24px; }
+        .su-method-text { font-size:14px; color:#374151; }
+        .su-method-text strong { color:var(--teal); }
+
+        /* ──── ADDRESS ──── */
+        .su-addr-box {
+            background:#F8FAFC; border-radius:12px; padding:16px 18px;
+            border:1px solid var(--border); font-size:13px; color:#374151;
+            line-height:1.8; margin-bottom:24px;
+        }
+        .su-addr-box strong { font-size:14px; color:var(--teal); }
+
+        /* ──── ACTIONS ──── */
+        .su-actions { display:flex; gap:14px; flex-wrap:wrap; }
+        .su-btn-primary {
+            flex:1; min-width:200px;
+            background:linear-gradient(135deg, var(--teal), #155E75);
+            color:white; border:none; border-radius:14px;
+            padding:16px; font-size:15px; font-weight:800;
+            font-family:'Plus Jakarta Sans', sans-serif;
+            cursor:pointer; text-align:center;
+            text-decoration:none; display:inline-flex;
+            align-items:center; justify-content:center; gap:8px;
+            transition:0.25s ease;
+            box-shadow:0 4px 16px rgba(10,60,74,.3);
+        }
+        .su-btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(10,60,74,.4); }
+        .su-btn-secondary {
+            flex:1; min-width:200px;
+            background:white; color:var(--teal);
+            border:2px solid var(--teal); border-radius:14px;
+            padding:16px; font-size:15px; font-weight:800;
+            font-family:'Plus Jakarta Sans', sans-serif;
+            cursor:pointer; text-align:center;
+            text-decoration:none; display:inline-flex;
+            align-items:center; justify-content:center; gap:8px;
+            transition:0.25s ease;
+        }
+        .su-btn-secondary:hover { background:var(--teal); color:white; }
+
+        /* ──── STEPS ──── */
+        .su-track-steps {
+            display:flex; gap:0; align-items:center;
+            justify-content:center; margin-bottom:24px; flex-wrap:wrap; gap:6px;
+        }
+        .su-track-step { display:flex; flex-direction:column; align-items:center; gap:4px; min-width:70px; }
+        .su-track-dot {
+            width:32px; height:32px; border-radius:50%;
+            background:var(--green); color:white;
+            display:flex; align-items:center; justify-content:center;
+            font-size:16px; font-weight:700;
+        }
+        .su-track-dot.inactive { background:#E2E8F0; color:var(--muted); }
+        .su-track-label { font-size:10px; font-weight:600; color:var(--muted); text-align:center; }
+        .su-track-label.active { color:var(--green); }
+        .su-track-line { flex:1; height:2px; background:#E2E8F0; max-width:40px; }
+        .su-track-line.done { background:var(--green); }
+
+        @media(max-width:500px){
+            .su-title { font-size:24px; }
+            .su-actions { flex-direction:column; }
+            .su-track-steps { gap:2px; }
+        }
+    </style>
 </head>
 <body>
 
-<h1>🎉 Order Placed Successfully</h1>
+<!-- TOPBAR -->
+<div class="su-topbar">
+    <a href="index.html" class="su-brand">
+        <img src="images/logo.png" alt="Niva Aura Logo">
+        <div class="su-brand-text">
+            <h2>Niva Aura</h2>
+            <span>Resin Studio</span>
+        </div>
+    </a>
+</div>
 
-<h2>Thank You For Shopping</h2>
+<!-- CONFETTI (rendered by JS) -->
+<div class="confetti-wrap" id="confettiWrap"></div>
 
-<p>
-Your order has been received.
-</p>
+<!-- SUCCESS HERO -->
+<div class="su-hero">
+    <div class="su-circle">
+        <span class="su-checkmark">✓</span>
+    </div>
+    <h1 class="su-title">Order Placed Successfully!</h1>
+    <p class="su-subtitle">Thank you for shopping with Niva Aura Resin Art 🎨</p>
+</div>
 
-<a href="index.html">
-Continue Shopping
-</a>
+<!-- MAIN CARD -->
+<div class="su-card">
 
+    <!-- Order ID Banner -->
+    <div class="su-order-id-banner">
+        <div>
+            <div class="su-order-id-label">Order ID</div>
+            <div class="su-order-id-val" id="orderId">—</div>
+        </div>
+        <div class="su-order-date" id="orderDate">—</div>
+    </div>
+
+    <!-- Order Tracking Steps -->
+    <p class="su-sec">Order Status</p>
+    <div class="su-track-steps">
+        <div class="su-track-step">
+            <div class="su-track-dot">✓</div>
+            <div class="su-track-label active">Confirmed</div>
+        </div>
+        <div class="su-track-line done"></div>
+        <div class="su-track-step">
+            <div class="su-track-dot inactive">📦</div>
+            <div class="su-track-label">Processing</div>
+        </div>
+        <div class="su-track-line"></div>
+        <div class="su-track-step">
+            <div class="su-track-dot inactive">🚚</div>
+            <div class="su-track-label">Shipped</div>
+        </div>
+        <div class="su-track-line"></div>
+        <div class="su-track-step">
+            <div class="su-track-dot inactive">🏠</div>
+            <div class="su-track-label">Delivered</div>
+        </div>
+    </div>
+
+    <!-- Product Items -->
+    <p class="su-sec">Items Ordered</p>
+    <div class="su-items" id="orderItems">
+        <p style="color:var(--muted);">Loading…</p>
+    </div>
+
+    <!-- Delivery Info -->
+    <div class="su-delivery-box">
+        <div class="su-del-icon">🚚</div>
+        <div class="su-del-text">
+            <h4>Estimated Delivery</h4>
+            <p>Your resin art masterpiece arrives by <span class="su-del-date" id="deliveryEst">—</span></p>
+        </div>
+    </div>
+
+    <!-- Price Breakdown -->
+    <p class="su-sec">Price Summary</p>
+    <div class="su-price-box">
+        <div class="su-price-row">
+            <span>Total MRP</span>
+            <span id="su-mrp">₹0</span>
+        </div>
+        <div class="su-price-row" id="su-coupon-row" style="display:none;">
+            <span>Coupon Discount</span>
+            <span class="rose" id="su-coupon">-₹0</span>
+        </div>
+        <div class="su-price-row">
+            <span>Delivery</span>
+            <span class="green" id="su-delivery">FREE</span>
+        </div>
+        <div class="su-price-row total">
+            <span>Amount Paid</span>
+            <span id="su-total">₹0</span>
+        </div>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="su-method-row">
+        <span class="su-method-icon" id="methodIcon">💳</span>
+        <div class="su-method-text">
+            Payment via <strong id="paymentMethod">—</strong>
+            <span id="paymentStatusBadge" style="margin-left:8px; font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; background:#F0FDF4; color:#15803D;">Confirmed</span>
+        </div>
+    </div>
+
+    <!-- Delivery Address -->
+    <p class="su-sec">Delivering To</p>
+    <div class="su-addr-box" id="deliveryAddress">—</div>
+
+    <!-- CTA BUTTONS -->
+    <div class="su-actions">
+        <a href="account.html" class="su-btn-primary">📦 View My Orders</a>
+        <a href="products.html" class="su-btn-secondary">🛍️ Continue Shopping</a>
+    </div>
+
+</div>
+
+<script>
+/* ──── Load order data from localStorage ──── */
+document.addEventListener("DOMContentLoaded", () => {
+    spawnConfetti();
+
+    const order = JSON.parse(localStorage.getItem("lastOrder") || "{}");
+    if (!order || !order.total) {
+        // No order data – might be direct navigation
+        document.getElementById("orderId").textContent  = "—";
+        document.getElementById("orderDate").textContent= new Date().toLocaleDateString("en-IN",{ day:"numeric", month:"long", year:"numeric" });
+        document.getElementById("orderItems").innerHTML = '<p style="color:var(--muted); font-size:13px;">No order data found. <a href="products.html" style="color:var(--teal); font-weight:700;">Continue Shopping</a></p>';
+        return;
+    }
+
+    // Order ID & date
+    document.getElementById("orderId").textContent   = order.orderId || ("NA" + Date.now());
+    document.getElementById("orderDate").textContent = order.date || new Date().toLocaleDateString("en-IN",{ day:"numeric", month:"long", year:"numeric" });
+
+    // Delivery estimate
+    document.getElementById("deliveryEst").textContent = order.deliveryEst || getDeliveryDate();
+
+    // Items
+    const itemsEl = document.getElementById("orderItems");
+    if (order.items && order.items.length) {
+        itemsEl.innerHTML = order.items.map(item => {
+            const tot = item.price * item.quantity;
+            const img = item.image || "images/resin_wall_clock.png";
+            return `
+            <div class="su-item">
+                <img src="${img}" class="su-item-img" alt="${item.product}" onerror="this.src='images/resin_wall_clock.png'">
+                <div class="su-item-info">
+                    <div class="su-item-name">${item.product}</div>
+                    <div class="su-item-qty">Qty: ${item.quantity}</div>
+                </div>
+                <div class="su-item-price">₹${tot.toLocaleString("en-IN")}</div>
+            </div>`;
+        }).join("");
+    } else {
+        itemsEl.innerHTML = '<p style="color:var(--muted); font-size:13px;">Items not available.</p>';
+    }
+
+    // Price
+    document.getElementById("su-mrp").textContent = "₹" + (order.mrp || order.total).toLocaleString("en-IN");
+    if (order.coupon > 0) {
+        document.getElementById("su-coupon-row").style.display = "flex";
+        document.getElementById("su-coupon").textContent = "-₹" + order.coupon.toLocaleString("en-IN");
+    }
+    document.getElementById("su-delivery").textContent = (order.delivery > 0) ? "₹" + order.delivery : "FREE";
+    document.getElementById("su-total").textContent = "₹" + order.total.toLocaleString("en-IN");
+
+    // Payment method icon map
+    const iconMap = {
+        "UPI":"📱", "Card":"💳", "Net Banking":"🏦",
+        "Wallet":"👜", "Cash On Delivery":"💵"
+    };
+    const method = order.method || "—";
+    document.getElementById("paymentMethod").textContent = method;
+    document.getElementById("methodIcon").textContent = iconMap[method] || "💳";
+
+    if (method === "Cash On Delivery") {
+        document.getElementById("paymentStatusBadge").style.background = "#FEF3C7";
+        document.getElementById("paymentStatusBadge").style.color      = "#92400E";
+        document.getElementById("paymentStatusBadge").textContent      = "Pay on Delivery";
+    }
+
+    // Address
+    const addrEl = document.getElementById("deliveryAddress");
+    if (order.name) {
+        addrEl.innerHTML = `<strong>${order.name}</strong><br>${order.address}`;
+    } else {
+        addrEl.textContent = "—";
+    }
+});
+
+function getDeliveryDate() {
+    const d = new Date();
+    d.setDate(d.getDate() + 5);
+    return d.toLocaleDateString("en-IN", { weekday:"long", day:"numeric", month:"long" });
+}
+
+/* ──── Confetti ──── */
+function spawnConfetti() {
+    const colors = ["#D4AF37","#0A3C4A","#E84A5F","#16A34A","#FF8C42","#A78BFA","#60A5FA"];
+    const wrap   = document.getElementById("confettiWrap");
+    for (let i = 0; i < 30; i++) {
+        const el = document.createElement("span");
+        el.style.background   = colors[Math.floor(Math.random() * colors.length)];
+        el.style.left         = (Math.random() * 100) + "vw";
+        el.style.top          = "-10px";
+        el.style.width        = (6 + Math.random() * 10) + "px";
+        el.style.height       = (6 + Math.random() * 10) + "px";
+        el.style.animationDelay    = (Math.random() * 1.5) + "s";
+        el.style.animationDuration = (1 + Math.random() * 1) + "s";
+        wrap.appendChild(el);
+    }
+}
+</script>
 </body>
 </html>

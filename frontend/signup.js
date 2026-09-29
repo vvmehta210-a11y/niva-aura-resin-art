@@ -35,7 +35,9 @@ function checkPassword(){
 
 }
 
-let verified = false;
+let timerInterval = null;
+let timeLeft = 60;
+let otpExpired = false;
 
 async function sendOTP() {
 
@@ -58,7 +60,7 @@ async function sendOTP() {
     try {
 
         const response = await fetch(
-            "https://niva-aura-resin-art.onrender.com/send-otp",
+            "http://localhost:5000/send-otp",
             {
                 method: "POST",
                 headers: {
@@ -79,6 +81,31 @@ async function sendOTP() {
 
         alert(data.message);
 
+        // Start countdown timer (60 seconds)
+        clearInterval(timerInterval);
+        timeLeft = 60;
+        otpExpired = false;
+        document.getElementById("otp").disabled = false;
+        document.getElementById("signupBtn").disabled = false;
+        
+        const timerElement = document.getElementById("timer");
+        timerElement.style.display = "block";
+        timerElement.innerText = "OTP valid for: " + timeLeft + "s";
+        timerElement.style.color = "#ff3366";
+
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                otpExpired = true;
+                timerElement.innerText = "OTP expired. Please click 'Send OTP' again.";
+                document.getElementById("signupBtn").disabled = true;
+                document.getElementById("otp").disabled = true;
+            } else {
+                timerElement.innerText = "OTP valid for: " + timeLeft + "s";
+            }
+        }, 1000);
+
     } catch (error) {
 
         console.error("Fetch Error:", error);
@@ -88,21 +115,26 @@ async function sendOTP() {
 }
 async function verifyOTP(){
 
+    if (otpExpired) {
+        alert("OTP has expired. Please send a new OTP.");
+        return;
+    }
+
     let email =
-document.getElementById("email").value.trim();
+    document.getElementById("email").value.trim();
 
-let otp =
-document.getElementById("otp").value.trim();
+    let otp =
+    document.getElementById("otp").value.trim();
 
-if(otp==""){
+    if(otp==""){
 
-    alert("Please enter OTP.");
-    return;
-}
+        alert("Please enter OTP.");
+        return;
+    }
 
     const response =
     await fetch(
-    "https://niva-aura-resin-art.onrender.com/verify-otp",
+    "http://localhost:5000/verify-otp",
     {
         method:"POST",
 
@@ -120,9 +152,10 @@ if(otp==""){
     const data =
     await response.json();
 
-    if(data.message ===
-       "OTP Verified Successfully"){
-
+    if(data.message === "OTP Verified Successfully"){
+        clearInterval(timerInterval);
+        document.getElementById("timer").innerText = "OTP Verified Successfully!";
+        document.getElementById("timer").style.color = "green";
         createAccount();
 
     }else{
@@ -134,7 +167,7 @@ if(otp==""){
 async function createAccount(){
 
     let name =
-    document.getElementById("name").value.trim();
+    document.getElementById("firstName").value.trim();
 
     let lastName =
     document.getElementById("lastName").value.trim();
@@ -184,7 +217,7 @@ async function createAccount(){
 
     const response =
     await fetch(
-    "https://niva-aura-resin-art.onrender.com/signup",
+    "http://localhost:5000/signup",
     {
 
         method:"POST",

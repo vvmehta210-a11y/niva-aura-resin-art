@@ -1,70 +1,57 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Create Account</title>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Niva Aura Resin Art</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
 </head>
 
 <body class="auth-page">
 
-<div class="signup-container">
+    <div class="signup-container">
+        <img src="images/logo.png" alt="Niva Aura Logo" class="signup-logo">
+        <h1>Niva Aura Studio</h1>
+        <p class="subtitle">Create Account</p>
 
-    <h1>Niva Aura Resin Art</h1>
-    <h2>Create Account</h2>
+        <div class="name-row">
+            <input type="text" id="firstName" placeholder="First Name" required>
+            <input type="text" id="lastName" placeholder="Last Name" required>
+        </div>
 
-    <div class="name-row">
+        <input type="email" id="email" placeholder="Email Address" required>
 
-    <input
-    type="text"
-    id="firstName"
-    placeholder="First Name">
+        <input type="password" id="password" placeholder="Create Password" onkeyup="checkPassword()" required>
+        <small id="passwordMessage"></small>
 
-    <input
-    type="text"
-    id="lastName"
-    placeholder="Last Name">
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
 
-</div>
-    <input
-    type="email"
-    id="email"
-    placeholder="Email Address">
+        <button class="otp-btn" onclick="sendOTP()">
+            Send OTP 📩
+        </button>
 
-    <input
-    type="password"
-    id="password"
-    placeholder="Create Password"
-    onkeyup="checkPassword()">
+        <input type="text" id="otp" placeholder="Enter 6-digit OTP">
+        <p id="timer" style="color: #E84A5F; font-size: 13px; font-weight: bold; text-align: center; margin: 10px 0; display: none;"></p>
 
-    <small id="passwordMessage"></small>
+        <button class="signup-btn" id="signupBtn" onclick="verifyOTP()">
+            Create Account ✨
+        </button>
 
-    <input
-    type="password"
-    id="confirmPassword"
-    placeholder="Confirm Password">
+        <p class="login-text">
+            Already have an account? <a href="login.html">Login</a>
+        </p>
 
-    <button class="otp-btn" onclick="sendOTP()">
-    Send OTP
-</button>
+        <div style="margin-top: 16px;">
+            <a href="index.html" style="font-size: 13px; color: var(--text-muted); text-decoration: none;">← Return To Main Website</a>
+        </div>
+    </div>
 
-<input
-type="text"
-id="otp"
-placeholder="Enter OTP">
-
-<button class="signup-btn" onclick="verifyOTP()">
-    Create Account
-</button>
-
-<p class="login-text">
-Already have an account?
-<a href="login.html">Login</a>
-</p>
-</div>
-
-<script src="signup.js"></script>
-
+    <script src="signup.js"></script>
 </body>
+
 </html>

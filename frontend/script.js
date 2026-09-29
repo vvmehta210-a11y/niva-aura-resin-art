@@ -1,349 +1,595 @@
-function showMessage(){
-    alert("Welcome to Niva Aura Resin Art");
-}
-let currentProduct="";
-let currentPrice=0;
+// Niva Aura Resin Art - Master Client Application Script (Luxury Studio + Buy Now & Login Edition)
 
-function openPopup(name,price){
-
-    currentProduct=name;
-    currentPrice=price;
-
-    document.getElementById("productName").innerText=name;
-
-    document.getElementById("popup").style.display="block";
-}
-
-function closePopup(){
-
-    document.getElementById("popup").style.display="none";
-}
-function addToCart(){
-
-    // Check if user is logged in
-    const email = localStorage.getItem("email");
-
-    if(!email){
-
-        alert("Please Login or Sign Up first.");
-
-        window.location.href = "login.html";
-        return;
-    }
-
-    let qty = document.getElementById("qty").value;
-
-    let item = {
-        product: currentProduct,
-        price: currentPrice,
-        quantity: parseInt(qty)
-    };
-
-    let cart =
-    JSON.parse(localStorage.getItem("cart")) || [];
-
-    cart.push(item);
-
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
-
-    alert("Product Added To Cart");
-
-    closePopup();
-
-    updateCartCount();
-
-    // Open cart automatically
-    window.location.href = "cart.html";
-}
-function updateCartCount(){
-
-    let cart =
-        JSON.parse(localStorage.getItem("cart")) || [];
-
-    let countElement =
-        document.getElementById("cartCount");
-
-    if(countElement){
-        countElement.innerHTML = cart.length;
-    }
-}
-
-function goToCart(){
-    window.location.href = "cart.html";
-}
-function searchProducts(){
-
-    let input =
-    document.getElementById("searchInput")
-    .value.toLowerCase();
-
-    let products =
-    document.querySelectorAll(".product");
-
-    products.forEach(product => {
-
-        let text =
-        product.innerText.toLowerCase();
-
-        if(text.includes(input)){
-
-            product.style.display =
-            "block";
-
-        }else{
-
-            product.style.display =
-            "none";
-        }
-
-    });
-}
-async function loadProducts(){
-
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/products"
-    );
-
-    const products =
-    await response.json();
-
-    let html = "";
-
-    products.forEach(product => {
-
-        html += `
-        <div class="product">
-
-            <div class="image-gallery">
-
-    <img
-    id="main-${product._id}"
-    class="main-image"
-    src="${product.images && product.images.length > 0
-? product.images[0]
-: 'images/no-image.png'}">
-
-    <div class="thumbnail-row">
-
-        ${
-            (product.images || []).map(image => `
-            <img
-            class="thumbnail"
-            src="${image}"
-            onclick="changeImage('main-${product._id}','${image}')">
-        `).join("")
-        }
-
-    </div>
-
-</div>
-
-
-
-            <h3>${product.name}</h3>
-
-            <p>₹${product.price}</p>
-
-            <button onclick="openPopup('${product.name}',${product.price})">
-                Add To Cart
-            </button>
-
-        </div>
-        `;
-    });
-
-    document.getElementById("products")
-    .innerHTML = html;
-}
-function changeImage(mainId, image){
-
-    document.getElementById(mainId).src = image;
-
-}
-
-function checkLoginStatus(){
-
-    let token = localStorage.getItem("token");
-
-    let accountSection =
-    document.getElementById("accountSection");
-
-    if(!accountSection) return;
-
-    if(token){
-
-        accountSection.innerHTML = `
-        <a href="account.html"
-        style="
-        text-decoration:none;
-        font-size:18px;
-        font-weight:bold;
-        color:#000;">
-        👤 My Account
-        </a>
-        `;
-
-    }else{
-
-        accountSection.innerHTML = `
-        <a href="login.html"
-        style="
-        text-decoration:none;
-        font-size:18px;
-        font-weight:bold;
-        color:#000;">
-        Login
-        </a>
-        `;
-    }
-}
-function loadUserProfile(){
-
-    let email =
-    localStorage.getItem("email");
-
-    let profile =
-    document.getElementById("userProfile");
-
-    if(!profile) return;
-
-    if(email){
-
-        let firstLetter =
-        email.charAt(0).toUpperCase();
-
-        profile.innerHTML = `
-        <div class="profile-circle"
-        onclick="window.location.href='account.html'">
-            ${firstLetter}
-        </div>
-        `;
-
-    }else{
-
-        profile.innerHTML = `
-        <a href="login.html">
-            Login
-        </a>
-        `;
-    }
-}
-async function submitReview(){
-
-    const user =
-    localStorage.getItem("name");
-
-    const rating =
-    document.getElementById("rating").value;
-
-    const review =
-    document.getElementById("review").value;
-
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/review",
+const DEFAULT_PRODUCTS = [
     {
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-            product:"Niva Aura",
-            user,
-            rating,
-            review
-        })
-    });
+        id: "p1",
+        name: "Ocean Wave Resin Wall Clock",
+        category: "Wall Clocks",
+        price: 3499,
+        rating: 4.9,
+        reviewsCount: 28,
+        badge: "Best Seller",
+        description: "Handcrafted 14-inch circular wall clock featuring multi-layer deep ocean resin waves with gold Roman numerals and high-torque silent sweep mechanism.",
+        specs: [
+            "Material: Premium Epoxy Resin & MDF",
+            "Diameter: 14 Inches (35 cm)",
+            "Movement: Silent Quartz Sweep",
+            "Finish: Crystal Clear Mirror Gloss",
+            "Accents: Hand-applied 24K Gold Foil"
+        ],
+        images: [
+            "images/resin_wall_clock.png",
+            "images/resin-bg.jpg"
+        ]
+    },
+    {
+        id: "p2",
+        name: "Pressed Botanical Resin Coasters Set",
+        category: "Coasters",
+        price: 1299,
+        rating: 4.8,
+        reviewsCount: 19,
+        badge: "Handcrafted",
+        description: "Set of 4 hexagonal crystal-clear resin coasters containing real preserved wildflowers, gold leaf edges, and non-slip protective backing.",
+        specs: [
+            "Includes: Set of 4 Coasters + Wooden Holder",
+            "Heat Resistance: Up to 90°C",
+            "Features: Anti-scratch silicone feet",
+            "Safe: Non-toxic Food Grade Resin"
+        ],
+        images: [
+            "images/resin_coasters.png",
+            "images/resin-bg.jpg"
+        ]
+    },
+    {
+        id: "p3",
+        name: "Emerald & Gold Leaf Resin Wash Basin",
+        category: "Wash Basins",
+        price: 14999,
+        rating: 5.0,
+        reviewsCount: 14,
+        badge: "Luxury Edition",
+        description: "Luxury designer countertop wash basin cast from deep emerald green liquid resin with floating gold flakes and scratch-resistant glaze.",
+        specs: [
+            "Dimensions: 16 x 16 x 5.5 inches",
+            "Finish: Stain & UV Scratch Resistant",
+            "Drainage: Standard Pop-up Drain Compatible",
+            "Warranty: 5 Years Surface Coating"
+        ],
+        images: [
+            "images/resin_wash_basin.png",
+            "images/resin-bg.jpg"
+        ]
+    },
+    {
+        id: "p4",
+        name: "Custom Initial Floral Resin Keychain",
+        category: "Keychains",
+        price: 399,
+        rating: 4.9,
+        reviewsCount: 45,
+        badge: "Popular Gift",
+        description: "Personalized alphabet letter keychain filled with blush pink dried flower petals, gold glitter dust, and heavy-duty gold alloy ring.",
+        specs: [
+            "Height: 4 cm (Letter height)",
+            "Hardware: Gold Plated Keyring + Clip",
+            "Customization: Any A-Z Initial Available",
+            "Durability: Non-yellowing Crystal Resin"
+        ],
+        images: [
+            "images/resin_keychain.png",
+            "images/resin-bg.jpg"
+        ]
+    },
+    {
+        id: "p5",
+        name: "Gold Foil & Sapphire Desk Nameplate",
+        category: "Nameplates",
+        price: 2199,
+        rating: 4.9,
+        reviewsCount: 22,
+        badge: "Custom Made",
+        description: "Premium executive desk nameplate with deep sapphire resin waves, custom laser-etched gold acrylic lettering, and solid mahogany base.",
+        specs: [
+            "Dimensions: 10 x 3 x 2.5 inches",
+            "Base: Solid Teak / Mahogany Wood",
+            "Text: Custom 3D Acrylic Engraving",
+            "Finish: High Polish Gloss Resin"
+        ],
+        images: [
+            "images/resin_nameplate.png",
+            "images/resin-bg.jpg"
+        ]
+    },
+    {
+        id: "p6",
+        name: "Celestial Turquoise Geode Resin Art",
+        category: "Custom Gifts",
+        price: 4999,
+        rating: 5.0,
+        reviewsCount: 31,
+        badge: "Featured Art",
+        description: "3D textured geode wall art piece featuring real quartz crystals, turquoise metallic resin poured layers, and polished gold metallic veining.",
+        specs: [
+            "Size: 18 x 24 Inches Canvas",
+            "Materials: Quartz Crystals, Glitter & Resin",
+            "Hanging: Pre-installed Heavy-Duty Hooks",
+            "Authenticity: Hand-signed by Artist"
+        ],
+        images: [
+            "images/resin_wall_clock.png",
+            "images/resin-bg.jpg"
+        ]
+    }
+];
 
-    const data =
-    await response.json();
+let activeModalProduct = null;
+let activeModalImageIndex = 0;
+let cachedAllProducts = [];
 
-    alert(data.message);
-
-    loadReviews();
+// Login validation check helper
+function isUserAuthenticated() {
+    const email = localStorage.getItem("email");
+    const token = localStorage.getItem("token");
+    const userLoggedIn = localStorage.getItem("userLoggedIn");
+    return !!(email || token || userLoggedIn === "true");
 }
 
-async function loadReviews(){
+// Get combined product list (Default + Custom Admin Products + Server Products)
+function getCombinedProducts() {
+    let customProducts = JSON.parse(localStorage.getItem("custom_products")) || [];
+    let adminProducts = JSON.parse(localStorage.getItem("admin_products")) || [];
+    
+    const normalizedCustom = [...customProducts, ...adminProducts].map((cp, index) => ({
+        id: cp.id || cp._id || ("custom_" + index + "_" + Date.now()),
+        name: cp.name,
+        category: cp.category || "Resin Art",
+        price: Number(cp.price) || 999,
+        rating: cp.rating || 5.0,
+        reviewsCount: cp.reviewsCount || 10,
+        badge: cp.badge || "New Arrival",
+        description: cp.description || "Handcrafted bespoke epoxy resin creation by Niva Aura Resin Studio.",
+        specs: cp.specs || ["Material: Premium Epoxy Resin", "Finish: High Gloss Crystal Clear"],
+        images: (cp.images && cp.images.length > 0) ? cp.images : ["images/resin_wall_clock.png"]
+    }));
 
-    const response =
-    await fetch(
-    "https://niva-aura-resin-art.onrender.com/reviews/Niva Aura"
-    );
+    const combined = [...normalizedCustom, ...DEFAULT_PRODUCTS];
+    const uniqueMap = new Map();
+    combined.forEach(item => {
+        if (!uniqueMap.has(item.name)) {
+            uniqueMap.set(item.name, item);
+        }
+    });
 
-    const reviews =
-    await response.json();
+    return Array.from(uniqueMap.values());
+}
+
+// Initialize on DOM Ready
+document.addEventListener("DOMContentLoaded", function () {
+    updateCartCount();
+    loadUserProfile();
+    loadProducts();
+    loadReviews();
+    setupKeyboardListeners();
+
+    window.addEventListener("storage", function (e) {
+        if (e.key === "custom_products" || e.key === "admin_products" || e.key === "cart" || e.key === "email") {
+            loadProducts();
+            updateCartCount();
+            loadUserProfile();
+        }
+    });
+});
+
+// Render Product Grid with "⚡ Buy Now" and "🛒 Add to Cart"
+function renderProducts(productsList) {
+    const container = document.getElementById("products");
+    if (!container) return;
+
+    if (!productsList || productsList.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7F8C8D;">
+                <h3>No resin products match your criteria</h3>
+                <p>Try clearing filters or search term</p>
+            </div>
+        `;
+        return;
+    }
 
     let html = "";
-
-    reviews.forEach(item => {
+    productsList.forEach(product => {
+        const primaryImg = (product.images && product.images.length > 0) ? product.images[0] : 'images/no-image.png';
+        const ratingVal = product.rating || 5;
+        const stars = "★".repeat(Math.floor(ratingVal)) + "☆".repeat(5 - Math.floor(ratingVal));
 
         html += `
-        <div class="product">
-
-            <h3>${item.user}</h3>
-
-            <p>⭐ ${item.rating}/5</p>
-
-            <p>${item.review}</p>
-
+        <div class="product-card">
+            ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+            <div class="product-image-box" onclick="openImageModal('${product.id}')">
+                <img src="${primaryImg}" alt="${product.name}" loading="lazy">
+                <div class="quick-view-overlay">
+                    <button class="btn-quick-view" onclick="event.stopPropagation(); openImageModal('${product.id}')">
+                        🔍 Quick View & Photos
+                    </button>
+                </div>
+            </div>
+            <div class="product-info">
+                <div class="product-category">${product.category || 'Resin Art'}</div>
+                <h3 class="product-title" onclick="openImageModal('${product.id}')" style="cursor:pointer;">${product.name}</h3>
+                <div class="product-rating">
+                    ${stars} <span>(${ratingVal})</span>
+                </div>
+                <div class="product-bottom">
+                    <div class="product-price">&#8377;${Number(product.price).toLocaleString('en-IN')}</div>
+                    <div class="card-actions">
+                        <button class="btn-icon" title="Add to Wishlist" onclick="addToWishlist('${product.name}', '${primaryImg}', ${product.price})">
+                            ❤️
+                        </button>
+                        <button class="btn-add-cart" onclick="quickAddToCart('${product.id}')">
+                            🛒 Add
+                        </button>
+                        <button class="btn-buy-now" onclick="handleBuyNow('${product.id}')">
+                            ⚡ Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
         `;
     });
 
-    document.getElementById(
-    "reviews"
-    ).innerHTML = html;
+    container.innerHTML = html;
 }
 
+// Fetch products from server + merge LocalStorage Admin Uploads
+async function loadProducts() {
+    let allProducts = getCombinedProducts();
 
-window.onload = function(){
+    try {
+        const response = await fetch("http://localhost:5000/products");
+        if (response.ok) {
+            const apiProducts = await response.json();
+            if (apiProducts && apiProducts.length > 0) {
+                const apiNormalized = apiProducts.map(p => ({
+                    id: p._id || p.id,
+                    name: p.name,
+                    category: p.category || "Resin Art",
+                    price: Number(p.price) || 999,
+                    rating: p.rating || 5.0,
+                    badge: "Admin Pick",
+                    description: p.description || "Handcrafted resin piece created in studio.",
+                    specs: ["Premium Grade Epoxy", "Handcrafted in Studio"],
+                    images: (p.images && p.images.length > 0) ? p.images : ["images/resin_wall_clock.png"]
+                }));
+                
+                const combinedMap = new Map();
+                [...allProducts, ...apiNormalized].forEach(item => combinedMap.set(item.name, item));
+                allProducts = Array.from(combinedMap.values());
+            }
+        }
+    } catch (e) {}
 
-    updateCartCount();
-    loadProducts();
-    loadUserProfile();
-    loadReviews();
-
+    cachedAllProducts = allProducts;
+    renderProducts(allProducts);
 }
 
-function addToWishlist(name,image,price){
+// Filter and Search
+function filterProducts() {
+    const searchVal = (document.getElementById("searchInput")?.value || "").toLowerCase();
+    const activePill = document.querySelector(".pill-btn.active");
+    const categoryVal = activePill ? activePill.dataset.category : "All";
 
-    let wishlist =
-    JSON.parse(
-    localStorage.getItem("wishlist")
-    ) || [];
-
-    wishlist.push({
-        name:name,
-        image:image,
-        price:price
+    const filtered = cachedAllProducts.filter(product => {
+        const matchesSearch = product.name.toLowerCase().includes(searchVal) ||
+                              (product.category && product.category.toLowerCase().includes(searchVal)) ||
+                              (product.description && product.description.toLowerCase().includes(searchVal));
+        const matchesCategory = (!categoryVal || categoryVal === "All" || product.category === categoryVal);
+        return matchesSearch && matchesCategory;
     });
 
-    localStorage.setItem(
-        "wishlist",
-        JSON.stringify(wishlist)
-    );
-
-    alert("Added To Wishlist ❤️");
+    renderProducts(filtered);
 }
 
-function checkLogin(productName) {
+function selectCategory(categoryName, element) {
+    document.querySelectorAll(".pill-btn").forEach(btn => btn.classList.remove("active"));
+    if (element) element.classList.add("active");
+    filterProducts();
+}
 
-    const email = localStorage.getItem("email");
+function searchProducts() {
+    filterProducts();
+}
 
-    if (!email) {
+// Interactive Lightbox Modal Logic
+function openImageModal(productId) {
+    const all = cachedAllProducts.length > 0 ? cachedAllProducts : getCombinedProducts();
+    const product = all.find(p => String(p.id) === String(productId) || p.name === productId) || all[0];
+    if (!product) return;
 
-        alert("Please Sign Up or Login first to purchase this item.");
+    activeModalProduct = product;
+    activeModalImageIndex = 0;
 
+    const modal = document.getElementById("imageModal");
+    if (!modal) return;
+
+    document.getElementById("modalBadge").innerText = product.badge || "Resin Artwork";
+    document.getElementById("modalTitle").innerText = product.name;
+    document.getElementById("modalPrice").innerHTML = `&#8377;${Number(product.price).toLocaleString('en-IN')}`;
+    document.getElementById("modalDesc").innerText = product.description || "Handcrafted resin piece.";
+    
+    const mainImg = document.getElementById("modalMainImage");
+    mainImg.src = (product.images && product.images.length > 0) ? product.images[0] : "images/no-image.png";
+    mainImg.alt = product.name;
+
+    const specsList = document.getElementById("modalSpecsList");
+    if (specsList) {
+        specsList.innerHTML = (product.specs || ["Material: Premium Epoxy Resin"]).map(spec => `<li>${spec}</li>`).join("");
+    }
+
+    const thumbsContainer = document.getElementById("modalThumbnails");
+    if (thumbsContainer) {
+        thumbsContainer.innerHTML = (product.images || [mainImg.src]).map((img, idx) => `
+            <img src="${img}" class="lightbox-thumb ${idx === 0 ? 'active' : ''}" onclick="switchModalImage(${idx})" alt="Thumbnail ${idx + 1}">
+        `).join("");
+    }
+
+    const qtyInput = document.getElementById("modalQtyInput");
+    if (qtyInput) qtyInput.value = 1;
+
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+}
+
+function switchModalImage(index) {
+    if (!activeModalProduct || !activeModalProduct.images[index]) return;
+    activeModalImageIndex = index;
+    const mainImg = document.getElementById("modalMainImage");
+    mainImg.src = activeModalProduct.images[index];
+
+    document.querySelectorAll(".lightbox-thumb").forEach((thumb, idx) => {
+        if (idx === index) thumb.classList.add("active");
+        else thumb.classList.remove("active");
+    });
+}
+
+function closeImageModal() {
+    const modal = document.getElementById("imageModal");
+    if (modal) {
+        modal.classList.remove("active");
+        document.body.style.overflow = "auto";
+    }
+}
+
+function setupKeyboardListeners() {
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeImageModal();
+    });
+}
+
+function changeModalQty(delta) {
+    const input = document.getElementById("modalQtyInput");
+    if (!input) return;
+    let current = parseInt(input.value) || 1;
+    current += delta;
+    if (current < 1) current = 1;
+    input.value = current;
+}
+
+// Buy Now Action handler
+function handleBuyNow(productId) {
+    if (!isUserAuthenticated()) {
+        alert("Please Sign Up or Login first to purchase this resin artwork.");
         window.location.href = "login.html";
-
         return;
     }
 
-    localStorage.setItem("selectedProduct", productName);
+    const all = cachedAllProducts.length > 0 ? cachedAllProducts : getCombinedProducts();
+    const product = all.find(p => String(p.id) === String(productId) || p.name === productId);
+    if (!product) return;
 
-    window.location.href = "payment.html";
+    addToCartItem({
+        id: product.id,
+        product: product.name,
+        price: product.price,
+        image: (product.images && product.images[0]) ? product.images[0] : "images/no-image.png",
+        quantity: 1
+    });
+
+    localStorage.setItem("selectedProduct", product.name);
+    window.location.href = "checkout.html";
+}
+
+function addModalProductToCart() {
+    if (!isUserAuthenticated()) {
+        alert("Please Login or Sign Up first to add items to your cart.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!activeModalProduct) return;
+    const qty = parseInt(document.getElementById("modalQtyInput")?.value || 1);
+    
+    addToCartItem({
+        id: activeModalProduct.id,
+        product: activeModalProduct.name,
+        price: activeModalProduct.price,
+        image: activeModalProduct.images[0],
+        quantity: qty
+    });
+
+    closeImageModal();
+}
+
+function buyModalProductNow() {
+    if (!isUserAuthenticated()) {
+        alert("Please Login or Sign Up first to buy this item.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if (!activeModalProduct) return;
+    handleBuyNow(activeModalProduct.id);
+}
+
+function quickAddToCart(productId) {
+    if (!isUserAuthenticated()) {
+        alert("Please Login or Sign Up first to add items to your cart.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const all = cachedAllProducts.length > 0 ? cachedAllProducts : getCombinedProducts();
+    const product = all.find(p => String(p.id) === String(productId));
+    if (!product) return;
+
+    addToCartItem({
+        id: product.id,
+        product: product.name,
+        price: product.price,
+        image: (product.images && product.images[0]) ? product.images[0] : "images/no-image.png",
+        quantity: 1
+    });
+}
+
+function addToCartItem(item) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingIndex = cart.findIndex(c => c.product === item.product);
+
+    if (existingIndex > -1) {
+        cart[existingIndex].quantity += item.quantity;
+    } else {
+        cart.push(item);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    showToast(`Added "${item.product}" to cart! 🛍️`);
+}
+
+function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    let totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    let countElement = document.getElementById("cartCount");
+    if (countElement) {
+        countElement.innerText = totalItems;
+    }
+}
+
+function goToCart() {
+    window.location.href = "checkout.html";
+}
+
+function addToWishlist(name, image, price) {
+    if (!isUserAuthenticated()) {
+        alert("Please Login or Sign Up first to save items to your wishlist.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    if (!wishlist.some(w => w.name === name)) {
+        wishlist.push({ name, image, price });
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        showToast("Added to Wishlist ❤️");
+    } else {
+        showToast("Already in your Wishlist! ❤️");
+    }
+}
+
+function loadUserProfile() {
+    const email = localStorage.getItem("email");
+    const name = localStorage.getItem("name");
+    const profile = document.getElementById("userProfile");
+    const navLoginBtns = document.querySelectorAll("#navLoginBtn, .nav-login-btn");
+
+    if (isUserAuthenticated() && email) {
+        const displayName = name || email.split("@")[0];
+        const firstLetter = displayName.charAt(0).toUpperCase();
+
+        if (profile) {
+            profile.innerHTML = `
+                <a href="account.html" class="user-login-badge" title="Account Details (${email})">
+                    <div style="width:26px; height:26px; border-radius:50%; background:var(--deep-teal); color:var(--primary-gold); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px;">
+                        ${firstLetter}
+                    </div>
+                    <span>👤 ${displayName}</span>
+                </a>
+            `;
+        }
+        navLoginBtns.forEach(btn => {
+            btn.href = "account.html";
+            btn.innerHTML = "👤 Account";
+        });
+    } else {
+        if (profile) {
+            profile.innerHTML = `
+                <a href="login.html" class="user-login-btn">
+                    🔑 Login / Sign Up
+                </a>
+            `;
+        }
+        navLoginBtns.forEach(btn => {
+            btn.href = "login.html";
+            btn.innerHTML = "🔑 Login";
+        });
+    }
+}
+
+function loadReviews() {
+    const reviewsContainer = document.getElementById("reviews");
+    if (!reviewsContainer) return;
+
+    const sampleReviews = [
+        { user: "Priya Sharma", rating: 5, review: "The Ocean Wave resin clock looks breathtaking on our living room wall! Incredible craft quality." },
+        { user: "Rohan Mehta", rating: 5, review: "Preserved floral coasters arrived safely packaged. The 24K gold foil trim gives them such a regal look!" },
+        { user: "Ananya Patel", rating: 5, review: "Custom emerald wash basin transformed our master bathroom vanity completely. Super easy to clean too." }
+    ];
+
+    let html = "";
+    sampleReviews.forEach(item => {
+        const stars = "★".repeat(item.rating);
+        html += `
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="review-author">${item.user}</span>
+                    <span class="review-rating">${stars}</span>
+                </div>
+                <p style="color: #4A5568; font-size: 14px; margin: 0;">"${item.review}"</p>
+            </div>
+        `;
+    });
+
+    reviewsContainer.innerHTML = html;
+}
+
+function showToast(message) {
+    let toast = document.getElementById("customToast");
+    if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "customToast";
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0A3C4A;
+            color: #D4AF37;
+            padding: 14px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999;
+            transition: all 0.3s ease;
+            transform: translateY(100px);
+            opacity: 0;
+        `;
+        document.body.appendChild(toast);
+    }
+    toast.innerText = message;
+    toast.style.transform = "translateY(0)";
+    toast.style.opacity = "1";
+    setTimeout(() => {
+        toast.style.transform = "translateY(100px)";
+        toast.style.opacity = "0";
+    }, 3000);
 }
